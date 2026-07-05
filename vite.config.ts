@@ -5,15 +5,14 @@
 //     error logger plugins, and sandbox detection (port/host/strictPort).
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
-export default {
-  build: {
-    chunkSizeWarningLimit: 3000
-  }
-}
+
 export default defineConfig({
+  vite: {
+    build: {
+      chunkSizeWarningLimit: 3000,
+    },
+  },
   tanstackStart: {
-    // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-    // nitro/vite builds from this
     server: { entry: "server" },
   },
 });
