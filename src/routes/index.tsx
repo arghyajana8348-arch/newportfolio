@@ -405,13 +405,13 @@ function Projects() {
 
           <aside className="reveal">
             <div className="font-mono text-xs text-muted-foreground mb-3">
-              <span className="text-primary">//</span> 3d experiments
+              {"\n"}
             </div>
             <SplineShowcase
               models={[
                 {
                   title: "Robot Playground",
-                  desc: "Interactive Spline scene — drag to explore.",
+                  desc: "Interactive\u00A0 scene — drag to explore.",
                   scene: "https://prod.spline.design/sVeEmN1NRk0vpwDo/scene.splinecode",
                   tags: ["Spline", "3D"],
                 },
