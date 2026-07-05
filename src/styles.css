@@ -99,33 +99,3 @@
   .caret::after { animation: none; }
 }
 
-/* Spline scene: center the 3D content and hide the watermark */
-.spline-canvas-wrap > div,
-.spline-canvas-wrap > div > div {
-  width: 100% !important;
-  height: 100% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-.spline-canvas-wrap canvas {
-  display: block !important;
-  margin: 0 auto !important;
-  width: 100% !important;
-  height: 100% !important;
-  max-width: 100% !important;
-  max-height: 100% !important;
-  object-fit: contain;
-}
-
-.spline-scene a[href*="spline.design"],
-.spline-scene .spline-watermark,
-.spline-scene canvas + a,
-.spline-scene canvas ~ a,
-.spline-scene a[href*="splinetool.com"] {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
