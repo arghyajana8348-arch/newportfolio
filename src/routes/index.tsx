@@ -7,7 +7,7 @@ import resumeAsset from "@/assets/Arghya_Jana_Resume.pdf.asset.json";
 import { toast, Toaster } from "sonner";
 import { buttonVariants as neonVariants } from "@/components/ui/neon-button";
 import { cn } from "@/lib/utils";
-import { InteractiveRobotSpline } from "@/components/ui/splite";
+import { Hero3D } from "@/components/Hero3D";
 
 function NeonAnchor({
   href,
