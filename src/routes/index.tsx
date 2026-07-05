@@ -7,6 +7,7 @@ import resumeAsset from "@/assets/Arghya_Jana_Resume.pdf.asset.json";
 import { toast, Toaster } from "sonner";
 import { buttonVariants as neonVariants } from "@/components/ui/neon-button";
 import { cn } from "@/lib/utils";
+import { InteractiveRobotSpline } from "@/components/ui/splite";
 
 function NeonAnchor({
   href,
@@ -196,16 +197,11 @@ function Hero() {
         </div>
 
         {/* Box */}
-        <div className="reveal relative h-[280px] sm:h-[360px] lg:h-[480px] w-full overflow-hidden rounded-xl border border-border bg-surface/30 backdrop-blur spline-scene flex items-center justify-center">
-          <div className="text-center space-y-3 px-6">
-            <div className="mx-auto h-16 w-16 rounded-full border-2 border-primary/40 flex items-center justify-center">
-              <span className="text-2xl">👋</span>
-            </div>
-            <p className="font-mono text-sm text-primary">hello, world</p>
-            <p className="text-xs text-muted-foreground max-w-[200px]">
-              Building cool things, one commit at a time.
-            </p>
-          </div>
+        <div className="reveal relative h-[280px] sm:h-[360px] lg:h-[480px] w-full overflow-hidden rounded-xl border border-border bg-surface/30 backdrop-blur spline-scene">
+          <InteractiveRobotSpline
+            scene="https://prod.spline.design/sVeEmN1NRk0vpwDo/scene.splinecode"
+            className="w-full h-full"
+          />
         </div>
       </div>
     </section>
