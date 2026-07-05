@@ -5,8 +5,6 @@ import arghyaPhoto from "@/assets/arghya.png.asset.json";
 const heroPhoto = { url: "/hero-photo.webp" };
 import resumeAsset from "@/assets/Arghya_Jana_Resume.pdf.asset.json";
 import { toast, Toaster } from "sonner";
-import { InteractiveRobotSpline } from "@/components/ui/splite";
-import { Spotlight } from "@/components/ui/spotlight";
 import { buttonVariants as neonVariants } from "@/components/ui/neon-button";
 import { cn } from "@/lib/utils";
 
@@ -197,22 +195,16 @@ function Hero() {
           </div>
         </div>
 
-        {/* 3D scene */}
-        <div className="reveal relative h-[280px] sm:h-[360px] lg:h-[480px] w-full overflow-hidden rounded-xl border border-border bg-surface/30 backdrop-blur spline-scene">
-          <Spotlight className="-top-40 left-0 md:-top-20 md:left-20" fill="oklch(0.82 0.17 195)" />
-          <div className="spline-canvas-wrap absolute inset-0 flex items-center justify-center">
-            <InteractiveRobotSpline
-              scene="https://prod.spline.design/sVeEmN1NRk0vpwDo/scene.splinecode"
-              className="w-full h-full"
-            />
-          </div>
-          {/* Cover the Spline watermark baked into the canvas */}
-          <div
-            aria-hidden
-            className="absolute bottom-0 right-0 h-14 w-44 z-[5] pointer-events-none bg-surface/30 backdrop-blur-xl"
-          />
-          <div className="absolute bottom-3 right-3 font-mono text-[10px] rounded-md border border-border bg-surface/80 px-2 py-1 text-muted-foreground z-10">
-            <span className="text-primary">●</span> online
+        {/* Box */}
+        <div className="reveal relative h-[280px] sm:h-[360px] lg:h-[480px] w-full overflow-hidden rounded-xl border border-border bg-surface/30 backdrop-blur spline-scene flex items-center justify-center">
+          <div className="text-center space-y-3 px-6">
+            <div className="mx-auto h-16 w-16 rounded-full border-2 border-primary/40 flex items-center justify-center">
+              <span className="text-2xl">👋</span>
+            </div>
+            <p className="font-mono text-sm text-primary">hello, world</p>
+            <p className="text-xs text-muted-foreground max-w-[200px]">
+              Building cool things, one commit at a time.
+            </p>
           </div>
         </div>
       </div>
