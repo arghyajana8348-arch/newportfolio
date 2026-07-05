@@ -1,18 +1,29 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useRef, useMemo, useState, useEffect } from "react";
 import * as THREE from "three";
+import { Settings2, X } from "lucide-react";
 
-const CYAN = "#22d3ee";
-const MAGENTA = "#e879f9";
+const DEFAULT_CORE = "#22d3ee";
+const DEFAULT_RING_OUTER = "#e879f9";
+const DEFAULT_RING_INNER = "#22d3ee";
+
+type SceneConfig = {
+  coreColor: string;
+  ringOuterColor: string;
+  ringInnerColor: string;
+  glow: number;
+};
 
 function Particle({
   initialPosition,
   speed,
   color,
+  glow,
 }: {
   initialPosition: THREE.Vector3;
   speed: number;
   color: string;
+  glow: number;
 }) {
   const ref = useRef<THREE.Mesh>(null);
   const axis = useMemo(() => {
@@ -39,14 +50,15 @@ function Particle({
       <meshStandardMaterial
         color={color}
         emissive={color}
-        emissiveIntensity={2}
+        emissiveIntensity={2 * glow}
       />
     </mesh>
   );
 }
 
-function Scene() {
+function Scene({ config }: { config: SceneConfig }) {
   const groupRef = useRef<THREE.Group>(null);
+  const { coreColor, ringOuterColor, ringInnerColor, glow } = config;
 
   const particles = useMemo(() => {
     return Array.from({ length: 18 }, (_, i) => ({
@@ -56,7 +68,7 @@ function Scene() {
         (Math.random() - 0.5) * 3
       ),
       speed: 0.15 + Math.random() * 0.35,
-      color: i % 3 === 0 ? MAGENTA : CYAN,
+      isAccent: i % 3 === 0,
     }));
   }, []);
 
@@ -82,9 +94,9 @@ function Scene() {
       <mesh>
         <icosahedronGeometry args={[1.5, 0]} />
         <meshStandardMaterial
-          color={CYAN}
-          emissive={CYAN}
-          emissiveIntensity={0.5}
+          color={coreColor}
+          emissive={coreColor}
+          emissiveIntensity={0.5 * glow}
           wireframe
           transparent
           opacity={0.5}
@@ -107,9 +119,9 @@ function Scene() {
       <mesh rotation={[Math.PI / 2.2, 0, 0]}>
         <torusGeometry args={[2.3, 0.025, 16, 100]} />
         <meshStandardMaterial
-          color={MAGENTA}
-          emissive={MAGENTA}
-          emissiveIntensity={0.6}
+          color={ringOuterColor}
+          emissive={ringOuterColor}
+          emissiveIntensity={0.6 * glow}
         />
       </mesh>
 
@@ -117,9 +129,9 @@ function Scene() {
       <mesh rotation={[Math.PI / 1.8, Math.PI / 3, 0]}>
         <torusGeometry args={[1.9, 0.02, 16, 80]} />
         <meshStandardMaterial
-          color={CYAN}
-          emissive={CYAN}
-          emissiveIntensity={0.4}
+          color={ringInnerColor}
+          emissive={ringInnerColor}
+          emissiveIntensity={0.4 * glow}
           transparent
           opacity={0.6}
         />
@@ -127,7 +139,13 @@ function Scene() {
 
       {/* Floating particles */}
       {particles.map((p, i) => (
-        <Particle key={i} {...p} />
+        <Particle
+          key={i}
+          initialPosition={p.initialPosition}
+          speed={p.speed}
+          color={p.isAccent ? ringOuterColor : coreColor}
+          glow={glow}
+        />
       ))}
     </group>
   );
@@ -135,6 +153,13 @@ function Scene() {
 
 export function Hero3D() {
   const [mounted, setMounted] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [config, setConfig] = useState<SceneConfig>({
+    coreColor: DEFAULT_CORE,
+    ringOuterColor: DEFAULT_RING_OUTER,
+    ringInnerColor: DEFAULT_RING_INNER,
+    glow: 1,
+  });
   useEffect(() => setMounted(true), []);
 
   if (!mounted) {
@@ -146,17 +171,102 @@ export function Hero3D() {
   }
 
   return (
-    <div className="w-full h-full">
+    <div className="relative w-full h-full">
       <Canvas
         camera={{ position: [0, 0, 5.5], fov: 50 }}
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: true }}
       >
         <ambientLight intensity={0.3} />
-        <pointLight position={[4, 4, 4]} intensity={1.2} color={CYAN} />
-        <pointLight position={[-3, -2, 3]} intensity={0.6} color={MAGENTA} />
-        <Scene />
+        <pointLight position={[4, 4, 4]} intensity={1.2 * config.glow} color={config.coreColor} />
+        <pointLight position={[-3, -2, 3]} intensity={0.6 * config.glow} color={config.ringOuterColor} />
+        <Scene config={config} />
       </Canvas>
+
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-label={open ? "Close 3D controls" : "Open 3D controls"}
+        className="absolute top-2 right-2 z-10 rounded-md border border-border/70 bg-background/60 backdrop-blur p-1.5 text-muted-foreground hover:text-primary hover:border-primary transition-colors"
+      >
+        {open ? <X className="h-3.5 w-3.5" /> : <Settings2 className="h-3.5 w-3.5" />}
+      </button>
+
+      {open && (
+        <div className="absolute top-11 right-2 z-10 w-56 rounded-lg border border-border/70 bg-background/85 backdrop-blur-md p-3 font-mono text-[11px] text-muted-foreground shadow-xl space-y-3">
+          <ColorRow
+            label="core"
+            value={config.coreColor}
+            onChange={(v) => setConfig((c) => ({ ...c, coreColor: v }))}
+          />
+          <ColorRow
+            label="ring outer"
+            value={config.ringOuterColor}
+            onChange={(v) => setConfig((c) => ({ ...c, ringOuterColor: v }))}
+          />
+          <ColorRow
+            label="ring inner"
+            value={config.ringInnerColor}
+            onChange={(v) => setConfig((c) => ({ ...c, ringInnerColor: v }))}
+          />
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <span>glow</span>
+              <span className="text-primary">{config.glow.toFixed(2)}x</span>
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={3}
+              step={0.05}
+              value={config.glow}
+              onChange={(e) =>
+                setConfig((c) => ({ ...c, glow: parseFloat(e.target.value) }))
+              }
+              className="w-full accent-primary"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() =>
+              setConfig({
+                coreColor: DEFAULT_CORE,
+                ringOuterColor: DEFAULT_RING_OUTER,
+                ringInnerColor: DEFAULT_RING_INNER,
+                glow: 1,
+              })
+            }
+            className="w-full rounded-md border border-border/70 py-1 text-muted-foreground hover:text-primary hover:border-primary transition-colors"
+          >
+            reset
+          </button>
+        </div>
+      )}
     </div>
+  );
+}
+
+function ColorRow({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <label className="flex items-center justify-between gap-2 cursor-pointer">
+      <span>{label}</span>
+      <span className="flex items-center gap-2">
+        <span className="text-foreground/80">{value}</span>
+        <input
+          type="color"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="h-6 w-6 rounded border border-border/70 bg-transparent cursor-pointer"
+        />
+      </span>
+    </label>
   );
 }
