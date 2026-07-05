@@ -8,6 +8,7 @@ import { toast, Toaster } from "sonner";
 import { buttonVariants as neonVariants } from "@/components/ui/neon-button";
 import { cn } from "@/lib/utils";
 import { Hero3D } from "@/components/Hero3D";
+import { SplineShowcase } from "@/components/SplineShowcase";
 
 function NeonAnchor({
   href,
@@ -342,8 +343,9 @@ function Projects() {
         <p className="reveal mt-3 text-sm text-muted-foreground font-mono">
           <span className="text-primary">//</span> sample cards — real projects coming soon
         </p>
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {PROJECTS.map((p, i) => (
+        <div className="mt-10 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {PROJECTS.map((p, i) => (
             <article
               key={p.title}
               className="reveal group relative rounded-xl border border-border bg-surface/60 backdrop-blur p-6 hover:border-primary transition-colors"
@@ -398,7 +400,24 @@ function Projects() {
                 ))}
               </div>
             </article>
-          ))}
+            ))}
+          </div>
+
+          <aside className="reveal">
+            <div className="font-mono text-xs text-muted-foreground mb-3">
+              <span className="text-primary">//</span> 3d experiments
+            </div>
+            <SplineShowcase
+              models={[
+                {
+                  title: "Robot Playground",
+                  desc: "Interactive Spline scene — drag to explore.",
+                  scene: "https://prod.spline.design/sVeEmN1NRk0vpwDo/scene.splinecode",
+                  tags: ["Spline", "3D"],
+                },
+              ]}
+            />
+          </aside>
         </div>
       </div>
     </section>
