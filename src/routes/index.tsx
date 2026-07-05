@@ -197,7 +197,7 @@ function Hero() {
         </div>
 
         {/* Box */}
-        <div className="reveal relative h-[280px] sm:h-[360px] lg:h-[480px] w-full overflow-hidden rounded-xl border border-border bg-surface/30 backdrop-blur spline-scene">
+        <div className="reveal relative aspect-square w-full max-w-[280px] sm:max-w-[360px] lg:max-w-[480px] mx-auto overflow-hidden rounded-xl border border-border bg-surface/30 backdrop-blur spline-scene">
           <InteractiveRobotSpline
             scene="https://prod.spline.design/sVeEmN1NRk0vpwDo/scene.splinecode"
             className="w-full h-full"
