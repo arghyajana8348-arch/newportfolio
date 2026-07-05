@@ -5,8 +5,6 @@ import arghyaPhoto from "@/assets/arghya.png.asset.json";
 const heroPhoto = { url: "/hero-photo.webp" };
 import resumeAsset from "@/assets/Arghya_Jana_Resume.pdf.asset.json";
 import { toast, Toaster } from "sonner";
-import { InteractiveRobotSpline } from "@/components/ui/splite";
-import { Spotlight } from "@/components/ui/spotlight";
 import { buttonVariants as neonVariants } from "@/components/ui/neon-button";
 import { cn } from "@/lib/utils";
 
