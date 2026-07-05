@@ -343,7 +343,7 @@ function Projects() {
         <p className="reveal mt-3 text-sm text-muted-foreground font-mono">
           <span className="text-primary">//</span> sample cards — real projects coming soon
         </p>
-        <div className="mt-10 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
+        <div className="mt-10 grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {PROJECTS.map((p, i) => (
             <article
