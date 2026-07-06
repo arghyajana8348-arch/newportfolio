@@ -1,14 +1,32 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
-import { FileText } from "lucide-react";
+import { useEffect, useRef, useState, lazy, Suspense } from "react";
+import { 
+  FileText, 
+  Home, 
+  User, 
+  Briefcase, 
+  FolderGit2, 
+  Flame, 
+  Mail, 
+  Github, 
+  Linkedin,
+  Trophy,
+  Gamepad2,
+  Terminal,
+  Sparkles
+} from "lucide-react";
 import arghyaPhoto from "@/assets/arghya.png.asset.json";
 const heroPhoto = { url: "/hero-photo.webp" };
 import resumeAsset from "@/assets/Arghya_Jana_Resume.pdf.asset.json";
 import { toast, Toaster } from "sonner";
 import { buttonVariants as neonVariants } from "@/components/ui/neon-button";
 import { cn } from "@/lib/utils";
-import { Hero3D } from "@/components/Hero3D";
-import { SplineShowcase } from "@/components/SplineShowcase";
+import { ParticleField } from "@/components/ParticleField";
+import { ContainerScroll } from "@/components/ui/container-scroll-animation";
+import { ClientOnly } from "@/components/ClientOnly";
+import { Dock, DockIcon, DockItem, DockLabel } from "@/components/ui/dock";
+import DisplayCards from "@/components/ui/display-cards";
+const Spline = lazy(() => import("@splinetool/react-spline"));
 
 function NeonAnchor({
   href,
@@ -80,13 +98,122 @@ function useReveal() {
   return ref;
 }
 
+function ShowCaseScroll() {
+  return (
+    <section className="py-12 md:py-24 px-5">
+      <ContainerScroll
+        titleComponent={
+          <div className="reveal">
+            <p className="font-mono text-xs text-primary uppercase tracking-widest">// interactive terminal</p>
+            <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold text-foreground mt-2 leading-tight">
+              Developer Profile <br />
+              <span className="text-gradient text-4xl sm:text-6xl md:text-7xl font-extrabold">&amp; Core Compilations</span>
+            </h2>
+          </div>
+        }
+      >
+        <div className="w-full h-full bg-[#0d1117] text-[#c9d1d9] font-mono text-xs sm:text-sm p-4 sm:p-6 overflow-y-auto border border-border/40 rounded-xl shadow-2xl flex flex-col justify-start text-left">
+          <div className="flex items-center gap-1.5 border-b border-border/30 pb-3 mb-4">
+            <span className="h-3 w-3 rounded-full bg-[#ff5f56]" />
+            <span className="h-3 w-3 rounded-full bg-[#ffbd2e]" />
+            <span className="h-3 w-3 rounded-full bg-[#27c93f]" />
+            <span className="ml-2 text-[10px] text-muted-foreground">arghya_jana_session.sh</span>
+          </div>
+          <div className="flex-1 space-y-4">
+            <div>
+              <span className="text-[#ff7b72]">guest@arghyajana.dev</span>:<span className="text-[#79c0ff]">~</span>$ cat info.json
+              <pre className="text-[#a5d6ff] mt-2 whitespace-pre-wrap pl-4">
+{`{
+  "name": "Arghya Jana",
+  "role": "Computer Science Engineering Student",
+  "focus": "Full Stack Development & Systems Engineering",
+  "location": "Kolkata, India",
+  "university": "Heritage Institute of Technology",
+  "interests": ["Algorithms", "Web Development", "AI Integration", "Graphics"]
+}`}
+              </pre>
+            </div>
+            <div>
+              <span className="text-[#ff7b72]">guest@arghyajana.dev</span>:<span className="text-[#79c0ff]">~</span>$ ./skills.sh --list
+              <div className="mt-2 pl-4 grid grid-cols-2 gap-2 text-[#79c0ff]">
+                <div>• HTML / CSS / JavaScript</div>
+                <div>• React.js / Vite</div>
+                <div>• Tailwind CSS</div>
+                <div>• Supabase / Backend integration</div>
+                <div>• Git / GitHub workflow</div>
+                <div>• TypeScript / Next.js</div>
+              </div>
+            </div>
+            <div>
+              <span className="text-[#ff7b72]">guest@arghyajana.dev</span>:<span className="text-[#79c0ff]">~</span>$ <span className="animate-pulse">_</span>
+            </div>
+          </div>
+        </div>
+      </ContainerScroll>
+    </section>
+  );
+}
+
+function FloatingDock() {
+  const dockItems = [
+    { title: "Home", icon: <Home className="h-5 w-5 text-[#6dd3ff]" />, href: "#home" },
+    { title: "About", icon: <User className="h-5 w-5 text-[#7ce7e5]" />, href: "#about" },
+    { title: "Skills", icon: <Briefcase className="h-5 w-5 text-[#8b82ff]" />, href: "#skills" },
+    { title: "Projects", icon: <FolderGit2 className="h-5 w-5 text-[#f279c6]" />, href: "#projects" },
+    { title: "Activities", icon: <Flame className="h-5 w-5 text-[#ffbd2e]" />, href: "#activities" },
+    { title: "Contact", icon: <Mail className="h-5 w-5 text-[#6dd3ff]" />, href: "#contact" },
+    { 
+      title: "GitHub", 
+      icon: <Github className="h-5 w-5 text-neutral-300 hover:text-white" />, 
+      href: "https://github.com/arghyajana8348-arch", 
+      external: true 
+    },
+    { 
+      title: "LinkedIn", 
+      icon: <Linkedin className="h-5 w-5 text-[#0077b5]" />, 
+      href: "https://linkedin.com/in/arghya-jana", 
+      external: true 
+    },
+  ];
+
+  return (
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-full pointer-events-auto">
+      <Dock className="items-end pb-3 bg-[#0d1322]/80 border border-white/10 backdrop-blur-md px-3 rounded-full shadow-[0_12px_40px_rgba(0,0,0,0.5)]">
+        {dockItems.map((item, idx) => (
+          <DockItem
+            key={idx}
+            className="aspect-square rounded-full bg-white/5 border border-white/10 hover:bg-white/15 transition-colors flex items-center justify-center"
+            onClick={() => {
+              if (item.external) {
+                window.open(item.href, "_blank", "noopener,noreferrer");
+              } else {
+                const el = document.querySelector(item.href);
+                if (el) {
+                  el.scrollIntoView({ behavior: "smooth" });
+                }
+              }
+            }}
+          >
+            <DockLabel>{item.title}</DockLabel>
+            <DockIcon>{item.icon}</DockIcon>
+          </DockItem>
+        ))}
+      </Dock>
+    </div>
+  );
+}
+
 function Portfolio() {
   useReveal();
   return (
     <div className="relative min-h-screen overflow-x-hidden font-sans">
+      <ParticleField />
       <Nav />
       <main>
         <Hero />
+        <ClientOnly>
+          <ShowCaseScroll />
+        </ClientOnly>
         <About />
         <Skills />
         <Projects />
@@ -94,6 +221,9 @@ function Portfolio() {
         <Contact />
       </main>
       <Footer />
+      <ClientOnly>
+        <FloatingDock />
+      </ClientOnly>
       <Toaster theme="dark" position="bottom-right" richColors />
     </div>
   );
@@ -101,26 +231,30 @@ function Portfolio() {
 
 // ---------- Nav ----------
 function Nav() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[color-mix(in_oklab,var(--background)_70%,transparent)] border-b border-border">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
+    <header
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        scrolled
+          ? "backdrop-blur-md bg-[color-mix(in_oklab,var(--background)_70%,transparent)] border-b border-border/80 py-2"
+          : "bg-transparent border-b border-transparent py-4"
+      )}
+    >
+      <nav className="mx-auto flex max-w-6xl items-center justify-between px-5">
         <a href="#home" className="font-mono text-sm font-bold text-primary">
           <span className="text-muted-foreground">~</span>arghya<span className="text-accent">.dev</span>
         </a>
-        <ul className="hidden md:flex items-center gap-1 font-mono text-xs rounded-full border border-border/60 bg-surface/40 backdrop-blur px-1.5 py-1">
-          {NAV.map((n) => (
-            <li key={n.id}>
-              <a
-                href={`#${n.id}`}
-                className="group relative inline-flex items-center rounded-full px-3.5 py-1.5 text-muted-foreground hover:text-primary transition-colors duration-300"
-              >
-                <span className="absolute inset-0 rounded-full bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300" />
-                <span className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ring-1 ring-inset ring-primary/40 shadow-[0_0_12px_-2px_var(--primary)]" />
-                <span className="relative">{n.label}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
+
         <div className="flex items-center gap-3">
           <a
             href={resumeAsset.url}
@@ -159,6 +293,61 @@ function Nav() {
 
 // ---------- Hero ----------
 function Hero() {
+  useEffect(() => {
+    // Hide the 'Built with Spline' watermark logo
+    const timer = setInterval(() => {
+      // 1. Target shadow root logos inside spline-viewer web components
+      const splineViewers = document.querySelectorAll("spline-viewer");
+      splineViewers.forEach((viewer) => {
+        if (viewer.shadowRoot) {
+          const logo = viewer.shadowRoot.getElementById("logo") || viewer.shadowRoot.querySelector("a[href*='spline']");
+          if (logo) {
+            const logoHtml = logo as HTMLElement;
+            logoHtml.style.setProperty("display", "none", "important");
+            logoHtml.style.setProperty("visibility", "hidden", "important");
+            logoHtml.style.setProperty("opacity", "0", "important");
+          }
+        }
+      });
+
+      // 2. Target regular DOM links that direct to spline
+      const links = document.querySelectorAll("a[href*='spline']");
+      links.forEach((link) => {
+        const linkHtml = link as HTMLElement;
+        linkHtml.style.setProperty("display", "none", "important");
+        linkHtml.style.setProperty("visibility", "hidden", "important");
+        linkHtml.style.setProperty("opacity", "0", "important");
+
+        // Hide parent hierarchy up to 3 levels to hide containing wrapper boxes
+        let parent = linkHtml.parentElement;
+        for (let i = 0; i < 3; i++) {
+          if (parent) {
+            parent.style.setProperty("display", "none", "important");
+            parent.style.setProperty("visibility", "hidden", "important");
+            parent.style.setProperty("opacity", "0", "important");
+            parent = parent.parentElement;
+          }
+        }
+      });
+    }, 250);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleSplineLoad = (splineApp: any) => {
+    if (splineApp && splineApp.camera) {
+      if (splineApp.camera.zoom) {
+        splineApp.camera.zoom = 0.72;
+      }
+      if (splineApp.camera.position) {
+        splineApp.camera.position.z *= 1.35;
+      }
+      if (typeof splineApp.camera.updateProjectionMatrix === "function") {
+        splineApp.camera.updateProjectionMatrix();
+      }
+    }
+  };
+
   return (
     <section id="home" className="relative flex min-h-screen items-center pt-24 pb-16">
       <div className="absolute inset-0 grid-bg pointer-events-none" aria-hidden />
@@ -198,8 +387,16 @@ function Hero() {
         </div>
 
         {/* Box */}
-        <div className="reveal relative aspect-square w-full max-w-[280px] sm:max-w-[360px] lg:max-w-[480px] mx-auto overflow-hidden rounded-xl border border-border bg-surface/30 backdrop-blur">
-          <Hero3D />
+        <div className="reveal relative aspect-square w-full max-w-[280px] sm:max-w-[360px] lg:max-w-[480px] mx-auto overflow-hidden">
+          <div className="absolute -top-[40px] left-[90px] -right-[170px] -bottom-[100px] overflow-hidden">
+            <Suspense fallback={
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+              </div>
+            }>
+              <Spline scene="https://prod.spline.design/sVeEmN1NRk0vpwDo/scene.splinecode" onLoad={handleSplineLoad} />
+            </Suspense>
+          </div>
         </div>
       </div>
     </section>
@@ -287,7 +484,7 @@ function Skills() {
             <div className="text-primary">skills list</div>
             <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
               {groups.map((g) => (
-                <div key={g.key} className="rounded-lg border border-border bg-background/40 p-5">
+                <div key={g.key} className="project-card-custom p-5">
                   <div className="flex items-center justify-between">
                     <div className="text-foreground font-semibold">{g.label}</div>
                     <span className="text-[10px] rounded-full border border-accent/50 text-accent px-2 py-0.5">
@@ -343,12 +540,12 @@ function Projects() {
         <p className="reveal mt-3 text-sm text-muted-foreground font-mono">
           <span className="text-primary">//</span> sample cards — real projects coming soon
         </p>
-        <div className="mt-10 grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-8">
+        <div className="mt-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {PROJECTS.map((p, i) => (
             <article
               key={p.title}
-              className="reveal group relative rounded-xl border border-border bg-surface/60 backdrop-blur p-6 hover:border-primary transition-colors"
+              className="reveal group project-card-custom p-6"
               style={{ animationDelay: `${i * 80}ms` }}
             >
               <div className="flex items-start justify-between">
@@ -402,22 +599,6 @@ function Projects() {
             </article>
             ))}
           </div>
-
-          <aside className="reveal">
-            <div className="font-mono text-xs text-muted-foreground mb-3">
-              {"\n"}
-            </div>
-            <SplineShowcase
-              models={[
-                {
-                  title: "Robot Playground",
-                  desc: "Interactive\u00A0 scene — drag to explore.",
-                  scene: "https://prod.spline.design/sVeEmN1NRk0vpwDo/scene.splinecode",
-                  tags: ["Spline", "3D"],
-                },
-              ]}
-            />
-          </aside>
         </div>
       </div>
     </section>
@@ -426,26 +607,57 @@ function Projects() {
 
 // ---------- Activities ----------
 function Activities() {
-  const items = [
-    "Quiz Competition — DAKSH HITK 2026",
-    "Valorant Gaming Event — DAKSH HITK 2026",
-    "WELCOME.YML — ACM HITK Student Chapter",
-    "E-SUMMIT 2025 — EDIC",
+  const cards = [
+    {
+      icon: <Trophy className="size-4 text-purple-300" />,
+      title: "E-SUMMIT 2025",
+      description: "EDIC HITK Event",
+      date: "2025",
+      iconClassName: "text-purple-500",
+      titleClassName: "text-purple-500",
+      className:
+        "[grid-area:stack] hover:-translate-y-12 before:absolute before:w-[100%] before:outline-1 before:rounded-xl before:outline-border before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-background/50 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0 z-[1]",
+    },
+    {
+      icon: <Terminal className="size-4 text-emerald-300" />,
+      title: "WELCOME.YML",
+      description: "ACM Student Chapter",
+      date: "2025",
+      iconClassName: "text-emerald-500",
+      titleClassName: "text-emerald-500",
+      className:
+        "[grid-area:stack] translate-x-8 translate-y-6 sm:translate-x-12 sm:translate-y-8 hover:-translate-y-6 before:absolute before:w-[100%] before:outline-1 before:rounded-xl before:outline-border before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-background/50 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0 z-[2]",
+    },
+    {
+      icon: <Gamepad2 className="size-4 text-red-300" />,
+      title: "Valorant Gaming",
+      description: "DAKSH HITK 2026",
+      date: "2026",
+      iconClassName: "text-red-500",
+      titleClassName: "text-red-500",
+      className:
+        "[grid-area:stack] translate-x-16 translate-y-12 sm:translate-x-24 sm:translate-y-16 hover:translate-y-2 before:absolute before:w-[100%] before:outline-1 before:rounded-xl before:outline-border before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-background/50 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0 z-[3]",
+    },
+    {
+      icon: <Sparkles className="size-4 text-blue-300" />,
+      title: "Quiz Competition",
+      description: "DAKSH HITK 2026",
+      date: "2026",
+      iconClassName: "text-blue-500",
+      titleClassName: "text-blue-500",
+      className:
+        "[grid-area:stack] translate-x-24 translate-y-18 sm:translate-x-36 sm:translate-y-24 hover:translate-y-8 z-[4]",
+    },
   ];
+
   return (
-    <section id="activities" className="py-20 px-5">
+    <section id="activities" className="py-24 px-5">
       <div className="mx-auto max-w-6xl">
         <SectionHeading label="04 / activities" title="Beyond the curriculum" />
-        <div className="reveal mt-8 flex flex-wrap gap-3">
-          {items.map((it) => (
-            <span
-              key={it}
-              className="rounded-full border border-border bg-surface/60 backdrop-blur px-4 py-2 text-sm text-muted-foreground hover:text-primary hover:border-primary transition-colors"
-            >
-              <span className="text-accent mr-2">★</span>
-              {it}
-            </span>
-          ))}
+        <div className="reveal mt-16 flex min-h-[380px] w-full items-center justify-center">
+          <div className="w-full max-w-xl flex justify-center pl-0 pr-8 sm:pr-24">
+            <DisplayCards cards={cards} />
+          </div>
         </div>
       </div>
     </section>

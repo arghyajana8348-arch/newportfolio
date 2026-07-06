@@ -21,19 +21,27 @@
 }
 
 :root {
-  --background: oklch(0.14 0.02 260);
+  --background: #07090f;
   --foreground: oklch(0.96 0.01 240);
-  --surface: oklch(0.18 0.025 260);
-  --surface-elevated: oklch(0.22 0.03 260);
-  --border: oklch(0.3 0.03 260);
+  --surface: #0e1422;
+  --surface-elevated: rgba(13, 19, 34, 0.7);
+  --border: rgba(255, 255, 255, 0.1);
   --muted: oklch(0.22 0.025 260);
   --muted-foreground: oklch(0.7 0.02 250);
-  --primary: oklch(0.82 0.17 195);             /* cyan */
-  --primary-foreground: oklch(0.14 0.02 260);
-  --accent: oklch(0.7 0.2 320);                /* magenta secondary */
-  --accent-foreground: oklch(0.14 0.02 260);
+  --primary: #6dd3ff;
+  --primary-foreground: #07090f;
+  --accent: #8b82ff;
+  --accent-foreground: #07090f;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+
+  /* Aushman gradients & neon colors */
+  --neon-blue: #6dd3ff;
+  --neon-purple: #8b82ff;
+  --neon-pink: #f279c6;
+  --neon-cyan: #7ce7e5;
+  --accent-gradient: linear-gradient(120deg, #7ce7e5 0%, #6dd3ff 42%, #8b82ff 100%);
+  --accent-gradient-hover: linear-gradient(120deg, #9beeea 0%, #8fe1ff 42%, #a9a2ff 100%);
 }
 
 @layer base {
@@ -44,17 +52,9 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     background-image:
-      radial-gradient(ellipse 80% 50% at 50% -10%, color-mix(in oklab, var(--primary) 18%, transparent), transparent 60%),
-      radial-gradient(ellipse 60% 40% at 90% 10%, color-mix(in oklab, var(--accent) 12%, transparent), transparent 60%);
-    background-attachment: fixed;
-  }
-
-  @supports (-webkit-hyphens: none) or (font: -apple-system-body) {
-    body { background-attachment: scroll; }
-  }
-
-  @media screen and (-webkit-min-device-pixel-ratio: 0) {
-    body { background-attachment: scroll; }
+      radial-gradient(circle at 10% 0%, rgba(124, 231, 229, 0.1), transparent 35%),
+      radial-gradient(circle at 95% 5%, rgba(139, 130, 255, 0.14), transparent 28%),
+      linear-gradient(180deg, #07090f 0%, #090e19 40%, #07090f 100%);
   }
 }
 
@@ -72,7 +72,7 @@
 }
 
 @utility text-gradient {
-  background: linear-gradient(135deg, var(--primary), var(--accent));
+  background: var(--accent-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -88,14 +88,80 @@
   50%      { box-shadow: 0 0 70px -10px color-mix(in oklab, var(--accent) 60%, transparent); }
 }
 
-.reveal { opacity: 0; }
-.reveal.in-view { animation: fade-up 0.7s ease-out forwards; }
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: transform, opacity;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
 .caret::after { content: "▌"; margin-left: 2px; color: var(--primary); animation: blink 1s steps(1) infinite; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .reveal { opacity: 1; }
-  .reveal.in-view { animation: none; }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
   .caret::after { animation: none; }
+}
+
+/* Custom Project Card Hover Effects */
+.project-card-custom {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(165deg, rgba(13, 19, 34, 0.72), rgba(13, 19, 34, 0.4));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.project-card-custom::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(109, 211, 255, 0.08), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.project-card-custom::after {
+  content: '';
+  position: absolute;
+  top: -160%;
+  left: -40%;
+  width: 42%;
+  height: 340%;
+  transform: rotate(24deg);
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+  opacity: 0;
+  transition: left 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.project-card-custom:hover {
+  transform: translateY(-6px);
+  border-color: rgba(109, 211, 255, 0.3);
+  box-shadow: 0 20px 40px rgba(109, 211, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.project-card-custom:hover::before {
+  opacity: 1;
+}
+
+.project-card-custom:hover::after {
+  left: 130%;
+  opacity: 1;
 }
 
