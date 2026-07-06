@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import arghyaPhoto from "@/assets/arghya.png.asset.json";
 const heroPhoto = { url: "/hero-photo.webp" };
-import resumeAsset from "@/assets/Arghya_Jana_Resume.pdf.asset.json";
+const resumeAsset = { url: "/resume.pdf" };
 import { toast, Toaster } from "sonner";
 import { buttonVariants as neonVariants } from "@/components/ui/neon-button";
 import { cn } from "@/lib/utils";
