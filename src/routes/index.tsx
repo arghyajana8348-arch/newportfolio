@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { createContext, useContext, useEffect, useRef, useState, lazy, Suspense } from "react";
+import { useEffect, useRef, useState, lazy, Suspense } from "react";
 import { 
   FileText, 
   Home, 
@@ -26,77 +26,7 @@ import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import { ClientOnly } from "@/components/ClientOnly";
 import { Dock, DockIcon, DockItem, DockLabel } from "@/components/ui/dock";
 import DisplayCards from "@/components/ui/display-cards";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import LoadingScreen from "@/components/LoadingScreen";
 const Spline = lazy(() => import("@splinetool/react-spline"));
-
-// ---------- Scroll Animation Primitives ----------
-const ReadyContext = createContext(false);
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 36 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const } },
-};
-const fadeLeft = {
-  hidden: { opacity: 0, x: -36 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const } },
-};
-const fadeRight = {
-  hidden: { opacity: 0, x: 36 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const } },
-};
-const stagger = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.12, delayChildren: 0.05 } },
-};
-
-function FadeUp({ children, delay = 0, className }: { children: React.ReactNode; delay?: number; className?: string }) {
-  const ready = useContext(ReadyContext);
-  return (
-    <motion.div
-      variants={fadeUp}
-      initial="hidden"
-      {...(ready ? { whileInView: "show" } : { animate: "hidden" })}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{ delay }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-function SlideLeft({ children, delay = 0, className }: { children: React.ReactNode; delay?: number; className?: string }) {
-  const ready = useContext(ReadyContext);
-  return (
-    <motion.div
-      variants={fadeLeft}
-      initial="hidden"
-      {...(ready ? { whileInView: "show" } : { animate: "hidden" })}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{ delay }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-function SlideRight({ children, delay = 0, className }: { children: React.ReactNode; delay?: number; className?: string }) {
-  const ready = useContext(ReadyContext);
-  return (
-    <motion.div
-      variants={fadeRight}
-      initial="hidden"
-      {...(ready ? { whileInView: "show" } : { animate: "hidden" })}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{ delay }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
-}
 
 function NeonAnchor({
   href,
@@ -273,41 +203,14 @@ function FloatingDock() {
   );
 }
 
-// Client-only wrapper that manages loading state and animations
-function PortfolioClient({ onReady }: { onReady: () => void }) {
-  const [isLoading, setIsLoading] = useState(true);
-
-  const handleComplete = () => {
-    setIsLoading(false);
-    // Wait for the exit animation to finish before unblocking scroll animations
-    setTimeout(onReady, 550);
-  };
-
-  return (
-    <>
-      <AnimatePresence mode="wait">
-        {isLoading && (
-          <LoadingScreen onComplete={handleComplete} />
-        )}
-      </AnimatePresence>
-      <Hero active={!isLoading} />
-    </>
-  );
-}
-
 function Portfolio() {
   useReveal();
-  const [isReady, setIsReady] = useState(false);
-
   return (
-    <ReadyContext.Provider value={isReady}>
     <div className="relative min-h-screen overflow-x-hidden font-sans">
       <ParticleField />
       <Nav />
-      <main className="relative z-10">
-        <ClientOnly>
-          <PortfolioClient onReady={() => setIsReady(true)} />
-        </ClientOnly>
+      <main>
+        <Hero />
         <ClientOnly>
           <ShowCaseScroll />
         </ClientOnly>
@@ -323,7 +226,6 @@ function Portfolio() {
       </ClientOnly>
       <Toaster theme="dark" position="bottom-right" richColors />
     </div>
-    </ReadyContext.Provider>
   );
 }
 
@@ -390,7 +292,7 @@ function Nav() {
 
 
 // ---------- Hero ----------
-function Hero({ active = false }: { active?: boolean }) {
+function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isRobotVisible, setIsRobotVisible] = useState(true);
 
@@ -463,67 +365,12 @@ function Hero({ active = false }: { active?: boolean }) {
     }
   };
 
-  // Entrance variants
-  const containerVariants = {
-    initial: {},
-    animate: {
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.2,
-      }
-    }
-  };
-
-  const imageVariants = {
-    initial: { opacity: 0, scale: 0.85, y: -20 },
-    animate: { 
-      opacity: 1, 
-      scale: 1, 
-      y: 0,
-      transition: { duration: 1.0, ease: [0.16, 1, 0.3, 1] as const } 
-    }
-  };
-
-  const textVariants = {
-    initial: { opacity: 0, x: -40 },
-    animate: { 
-      opacity: 1, 
-      x: 0,
-      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const } 
-    }
-  };
-
-  const ctaVariants = {
-    initial: { opacity: 0, y: 25 },
-    animate: { 
-      opacity: 1, 
-      y: 0,
-      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const } 
-    }
-  };
-
-  const robotVariants = {
-    initial: { opacity: 0, scale: 0.9, x: 50 },
-    animate: { 
-      opacity: 1, 
-      scale: 1, 
-      x: 0,
-      transition: { duration: 1.4, ease: [0.16, 1, 0.3, 1] as const, delay: 0.4 } 
-    }
-  };
-
   return (
     <section ref={containerRef} id="home" className="relative flex min-h-screen items-center pt-24 pb-16">
       <div className="absolute inset-0 grid-bg pointer-events-none" aria-hidden />
       <div className="mx-auto grid max-w-6xl grid-cols-1 lg:grid-cols-[1.4fr_1fr] items-center gap-12 px-5 relative">
-        <motion.div 
-          variants={containerVariants}
-          initial="initial"
-          animate={active ? "animate" : "initial"}
-          className="flex flex-col"
-        >
-          <motion.img
-            variants={imageVariants}
+        <div className="reveal">
+          <img
             src={heroPhoto.url}
             alt="Arghya Jana"
             width={224}
@@ -533,48 +380,31 @@ function Hero({ active = false }: { active?: boolean }) {
             className="mb-6 h-40 w-40 sm:h-48 sm:w-48 md:h-56 md:w-56 rounded-full object-cover object-center border-2 border-primary/70 shadow-[0_0_40px_-6px_var(--primary)]"
           />
 
-          <motion.h1 
-            variants={textVariants}
-            className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight"
-          >
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight">
             Arghya <span className="text-gradient">Jana</span>
-          </motion.h1>
-          <motion.p 
-            variants={textVariants}
-            className="mt-5 font-mono text-sm sm:text-base text-muted-foreground"
-          >
+          </h1>
+          <p className="mt-5 font-mono text-sm sm:text-base text-muted-foreground">
             <span className="text-primary">&gt;</span> Computer Science Engineering Student
             <span className="mx-2 text-border">|</span>
             <span className="text-accent">Aspiring Software Engineer</span>
-          </motion.p>
-          <motion.p 
-            variants={textVariants}
-            className="mt-6 max-w-xl text-base text-muted-foreground leading-relaxed"
-          >
+          </p>
+          <p className="mt-6 max-w-xl text-base text-muted-foreground leading-relaxed">
             An aspiring engineering student with a strong foundation in computational logic,
             applying analytical skills toward impactful engineering work — with the long-term goal
             of growing into a leadership role.
-          </motion.p>
-          <motion.div 
-            variants={ctaVariants}
-            className="mt-8 flex flex-wrap gap-3"
-          >
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
             <NeonAnchor href="#projects" variant="solid" size="lg" className="font-semibold">
               view projects
             </NeonAnchor>
             <NeonAnchor href="#contact" variant="default" size="lg">
               contact me
             </NeonAnchor>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
         {/* Box */}
-        <motion.div 
-          variants={robotVariants}
-          initial="initial"
-          animate={active ? "animate" : "initial"}
-          className="relative aspect-square w-full max-w-[280px] sm:max-w-[360px] lg:max-w-[480px] h-[340px] sm:h-auto mx-auto overflow-hidden"
-        >
+        <div className="reveal relative aspect-square w-full max-w-[280px] sm:max-w-[360px] lg:max-w-[480px] h-[340px] sm:h-auto mx-auto overflow-hidden">
           <div 
             style={{ display: isRobotVisible ? 'block' : 'none' }}
             className="absolute -top-[40px] left-0 -right-[80px] lg:left-[90px] lg:-right-[170px] -bottom-[100px] overflow-hidden"
@@ -587,7 +417,7 @@ function Hero({ active = false }: { active?: boolean }) {
               <Spline scene="https://prod.spline.design/sVeEmN1NRk0vpwDo/scene.splinecode" onLoad={handleSplineLoad} />
             </Suspense>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
@@ -595,119 +425,57 @@ function Hero({ active = false }: { active?: boolean }) {
 
 // ---------- About ----------
 function About() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  
-  // Track scroll progress of the section
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"]
-  });
-
-  // Map scroll progress to subtle animations
-  const yParallax = useTransform(scrollYProgress, [0, 1], [30, -30]);
-  const blobY = useTransform(scrollYProgress, [0, 1], [-80, 80]);
-  
-  // Connector line draws itself between 12% and 55% of the section's scroll path
-  const lineProgress = useTransform(scrollYProgress, [0.12, 0.55], [0, 1]);
-
   const timeline = [
     { year: "2022", title: "Secondary (Class X)", org: "WBCSE", score: "94.5%" },
     { year: "2024", title: "Higher Secondary — PCMB", org: "WBCHSE", score: "93%" },
     { year: "2025–29", title: "B.Tech, Computer Science & Engineering", org: "Heritage Institute of Technology (MAKAUT)", score: "SGPA 9.53" },
   ];
-
   return (
-    <section ref={sectionRef} id="about" className="relative py-24 px-5 overflow-hidden">
-      {/* Scroll-animated background glow */}
-      <motion.div
-        style={{ y: blobY }}
-        className="absolute right-0 top-1/4 w-[350px] h-[350px] rounded-full bg-gradient-to-tr from-primary/10 to-accent/15 blur-[120px] pointer-events-none -z-10"
-      />
-      
-      <div className="mx-auto max-w-6xl relative z-10">
+    <section id="about" className="py-24 px-5">
+      <div className="mx-auto max-w-6xl">
         <SectionHeading label="01 / about" title="A quick introduction" />
-        <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          <motion.div
-            variants={stagger}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.2 }}
-            className="space-y-4 text-muted-foreground leading-relaxed"
-          >
-            <motion.p variants={fadeLeft}>
+        <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="reveal space-y-4 text-muted-foreground leading-relaxed">
+            <p>
               I'm <span className="text-foreground font-medium">Arghya Jana</span>, a first-year
               B.Tech CSE student at <span className="text-primary">Heritage Institute of Technology</span>
               {" "}(affiliated to MAKAUT), graduating in 2029.
-            </motion.p>
-            <motion.p variants={fadeLeft}>
+            </p>
+            <p>
               Currently maintaining an <span className="text-foreground">SGPA of 9.53</span>, I'm
               focused on building strong fundamentals in computer science — from data structures
               and algorithms to systems and software engineering principles.
-            </motion.p>
-            <motion.p variants={fadeLeft}>
+            </p>
+            <p>
               Outside the classroom, I take part in student communities and tech events to
               broaden my perspective and meet people building interesting things.
-            </motion.p>
-            <motion.div variants={fadeUp} className="flex flex-wrap gap-2 pt-4">
+            </p>
+            <div className="flex flex-wrap gap-2 pt-4">
               <Chip>WELCOME.YML — ACM HITK Student Chapter</Chip>
               <Chip>E-SUMMIT 2025 — EDIC</Chip>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
 
-          {/* Timeline with Scroll Parallax */}
-          <motion.div style={{ y: yParallax }} className="w-full">
-            <SlideRight className="project-card-custom rounded-xl border border-border bg-surface/60 backdrop-blur p-6 relative overflow-hidden">
-              <div className="font-mono text-xs text-muted-foreground mb-5 flex items-center gap-2 relative z-10">
-                <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f56]" />
-                <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
-                <span className="h-2.5 w-2.5 rounded-full bg-[#27c93f]" />
-                <span className="ml-2">education</span>
-              </div>
-              
-              <motion.ol
-                variants={stagger}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, amount: 0.3 }}
-                className="relative ml-3 space-y-7 z-10"
-              >
-                {/* Animated scroll connector line */}
-                <div className="absolute left-0 top-2 bottom-2 w-[2px] bg-border/20 rounded-full">
-                  <motion.div
-                    className="w-full h-full bg-gradient-to-b from-primary via-accent to-pink-500 origin-top"
-                    style={{ scaleY: lineProgress }}
-                  />
-                </div>
-
-                {timeline.map((t, i) => (
-                  <motion.li
-                    key={t.title}
-                    variants={{
-                      hidden: { opacity: 0, x: -20 },
-                      show: {
-                        opacity: 1,
-                        x: 0,
-                        transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] as const, delay: i * 0.12 },
-                      },
-                    }}
-                    className="pl-6 relative"
-                  >
-                    <motion.span
-                      initial={{ scale: 0 }}
-                      whileInView={{ scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.4, delay: 0.1 + i * 0.12, type: "spring", stiffness: 300 }}
-                      className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full bg-primary glow-cyan"
-                    />
-                    <div className="font-mono text-xs text-primary">[{t.year}]</div>
-                    <div className="mt-1 font-semibold text-foreground">{t.title}</div>
-                    <div className="text-sm text-muted-foreground">{t.org}</div>
-                    <div className="font-mono text-xs mt-1 text-accent">{t.score}</div>
-                  </motion.li>
-                ))}
-              </motion.ol>
-            </SlideRight>
-          </motion.div>
+          {/* Timeline */}
+          <div className="reveal rounded-xl border border-border bg-surface/60 backdrop-blur p-6">
+            <div className="font-mono text-xs text-muted-foreground mb-5 flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f56]" />
+              <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
+              <span className="h-2.5 w-2.5 rounded-full bg-[#27c93f]" />
+              <span className="ml-2">education</span>
+            </div>
+            <ol className="relative ml-3 border-l border-border space-y-7">
+              {timeline.map((t) => (
+                <li key={t.title} className="pl-6 relative">
+                  <span className="absolute -left-[7px] top-1.5 h-3 w-3 rounded-full bg-primary glow-cyan" />
+                  <div className="font-mono text-xs text-primary">[{t.year}]</div>
+                  <div className="mt-1 font-semibold text-foreground">{t.title}</div>
+                  <div className="text-sm text-muted-foreground">{t.org}</div>
+                  <div className="font-mono text-xs mt-1 text-accent">{t.score}</div>
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
       </div>
     </section>
@@ -725,7 +493,7 @@ function Skills() {
     <section id="skills" className="py-24 px-5">
       <div className="mx-auto max-w-6xl">
         <SectionHeading label="02 / skills" title="What I'm building with" />
-        <FadeUp className="mt-10 rounded-xl border border-border bg-surface/60 backdrop-blur overflow-hidden">
+        <div className="reveal mt-10 rounded-xl border border-border bg-surface/60 backdrop-blur overflow-hidden">
           <div className="flex items-center gap-2 px-4 py-2 border-b border-border font-mono text-xs text-muted-foreground">
             <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f56]" />
             <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
@@ -734,15 +502,9 @@ function Skills() {
           </div>
           <div className="p-6 font-mono text-sm">
             <div className="text-primary">skills list</div>
-            <motion.div
-              variants={stagger}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, amount: 0.2 }}
-              className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6"
-            >
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
               {groups.map((g) => (
-                <motion.div variants={fadeUp} key={g.key} className="project-card-custom p-5">
+                <div key={g.key} className="project-card-custom p-5">
                   <div className="flex items-center justify-between">
                     <div className="text-foreground font-semibold">{g.label}</div>
                     <span className="text-[10px] rounded-full border border-accent/50 text-accent px-2 py-0.5">
@@ -759,14 +521,14 @@ function Skills() {
                       </span>
                     ))}
                   </div>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
-            <FadeUp delay={0.3} className="mt-6 text-muted-foreground">
+            </div>
+            <div className="mt-6 text-muted-foreground">
               "still learning — every commit counts."
-            </FadeUp>
+            </div>
           </div>
-        </FadeUp>
+        </div>
       </div>
     </section>
   );
@@ -795,22 +557,16 @@ function Projects() {
     <section id="projects" className="py-24 px-5">
       <div className="mx-auto max-w-6xl">
         <SectionHeading label="03 / projects" title="Things I've been building" />
-        <FadeUp className="mt-3 text-sm text-muted-foreground font-mono">
+        <p className="reveal mt-3 text-sm text-muted-foreground font-mono">
           <span className="text-primary">//</span> sample cards — real projects coming soon
-        </FadeUp>
-        <motion.div
-          variants={stagger}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.1 }}
-          className="mt-10"
-        >
+        </p>
+        <div className="mt-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {PROJECTS.map((p, i) => (
-            <motion.article
-              variants={fadeUp}
+            <article
               key={p.title}
-              className="group project-card-custom p-6"
+              className="reveal group project-card-custom p-6"
+              style={{ animationDelay: `${i * 80}ms` }}
             >
               <div className="flex items-start justify-between">
                 <div className="font-mono text-xs text-muted-foreground">
@@ -860,10 +616,10 @@ function Projects() {
                   </span>
                 ))}
               </div>
-            </motion.article>
+            </article>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
@@ -918,11 +674,11 @@ function Activities() {
     <section id="activities" className="py-24 px-5">
       <div className="mx-auto max-w-6xl">
         <SectionHeading label="04 / activities" title="Beyond the curriculum" />
-        <FadeUp className="mt-16 flex min-h-[380px] w-full items-center justify-center">
+        <div className="reveal mt-16 flex min-h-[380px] w-full items-center justify-center">
           <div className="w-full max-w-xl flex justify-center px-0 md:pr-24">
             <DisplayCards cards={cards} />
           </div>
-        </FadeUp>
+        </div>
       </div>
     </section>
   );
@@ -974,14 +730,14 @@ function Contact() {
     <section id="contact" className="py-24 px-5">
       <div className="mx-auto max-w-6xl">
         <SectionHeading label="05 / contact" title="Let's connect" />
-        <FadeUp className="mt-4 text-muted-foreground max-w-2xl">
+        <p className="reveal mt-4 text-muted-foreground max-w-2xl">
           Open to learning opportunities, internships, hackathons, and study collaborations.
-        </FadeUp>
+        </p>
 
 
         <div className="mt-12 grid md:grid-cols-5 gap-6">
           {/* Form card */}
-          <SlideLeft className="md:col-span-3">
+          <div className="md:col-span-3 reveal">
             <div className="rounded-lg border border-border bg-surface/40 overflow-hidden">
               <div className="flex items-center gap-2 border-b border-border px-4 py-2.5 bg-surface/60">
                 <span className="h-2.5 w-2.5 rounded-full bg-red-500/70" />
@@ -1064,10 +820,10 @@ function Contact() {
                 </button>
               </form>
             </div>
-          </SlideLeft>
+          </div>
 
           {/* Direct links */}
-          <SlideRight className="md:col-span-2">
+          <div className="md:col-span-2 reveal">
             <div className="h-full rounded-lg border border-border bg-surface/40 p-5 sm:p-6 flex flex-col">
               <div className="font-mono text-xs text-muted-foreground">contact.info</div>
               <div className="mt-4">
@@ -1094,7 +850,7 @@ function Contact() {
                 <span className="text-primary">›</span> usually replies within a day
               </div>
             </div>
-          </SlideRight>
+          </div>
         </div>
       </div>
     </section>
@@ -1104,7 +860,7 @@ function Contact() {
 // ---------- Footer ----------
 function Footer() {
   return (
-    <footer className="relative z-10 border-t border-border py-8 px-5 mt-10">
+    <footer className="border-t border-border py-8 px-5 mt-10">
       <div className="mx-auto max-w-6xl flex flex-col sm:flex-row items-center justify-between gap-3 font-mono text-xs text-muted-foreground">
         <div>© 2026 Arghya Jana</div>
         <div>
@@ -1118,22 +874,16 @@ function Footer() {
 // ---------- Bits ----------
 function SectionHeading({ label, title }: { label: string; title: string }) {
   const cleanLabel = label.replace(/^\s*\d+\s*\/\s*/, "");
-  const ready = useContext(ReadyContext);
   return (
-    <motion.div
-      variants={stagger}
-      initial="hidden"
-      {...(ready ? { whileInView: "show" } : { animate: "hidden" })}
-      viewport={{ once: true, amount: 0.3 }}
-    >
-      <motion.div variants={fadeUp} className="font-mono text-sm sm:text-base uppercase tracking-[0.25em] text-primary">
+    <div className="reveal">
+      <div className="font-mono text-sm sm:text-base uppercase tracking-[0.25em] text-primary">
         {cleanLabel}
-      </motion.div>
-      <motion.h2 variants={fadeUp} className="mt-4 text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.05]">
+      </div>
+      <h2 className="mt-4 text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.05]">
         {title}
-      </motion.h2>
-      <motion.div variants={fadeUp} className="mt-5 h-1 w-24 rounded-full bg-gradient-to-r from-primary to-accent" />
-    </motion.div>
+      </h2>
+      <div className="mt-5 h-1 w-24 rounded-full bg-gradient-to-r from-primary to-accent" />
+    </div>
   );
 }
 
