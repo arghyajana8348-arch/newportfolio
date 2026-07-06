@@ -88,25 +88,15 @@
 }
 
 .reveal {
-  opacity: 0;
-  transform: translateY(40px);
-  will-change: transform, opacity;
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  /* No animation — content always visible */
 }
 .reveal.in-view {
-  opacity: 1;
-  transform: translateY(0);
+  /* kept for compatibility */
 }
 .caret::after { content: "▌"; margin-left: 2px; color: var(--primary); animation: blink 1s steps(1) infinite; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
   .caret::after { animation: none; }
 }
 
