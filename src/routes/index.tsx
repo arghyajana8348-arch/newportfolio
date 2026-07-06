@@ -404,7 +404,7 @@ function Hero() {
         </div>
 
         {/* Box */}
-        <div className="reveal relative aspect-square w-full max-w-[280px] sm:max-w-[360px] lg:max-w-[480px] mx-auto overflow-hidden">
+        <div className="reveal relative aspect-square w-full max-w-[280px] sm:max-w-[360px] lg:max-w-[480px] h-[340px] sm:h-auto mx-auto overflow-hidden">
           <div 
             style={{ display: isRobotVisible ? 'block' : 'none' }}
             className="absolute -top-[40px] left-0 -right-[80px] lg:left-[90px] lg:-right-[170px] -bottom-[100px] overflow-hidden"
