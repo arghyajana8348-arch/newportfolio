@@ -100,58 +100,15 @@ function useReveal() {
   return ref;
 }
 
-function ShowCaseScroll() {
+function DeveloperProfileBanner() {
   return (
-    <section className="py-12 md:py-24 px-5">
-      <ContainerScroll
-        titleComponent={
-          <div className="reveal">
-            <p className="font-mono text-xs text-primary uppercase tracking-widest">// interactive terminal</p>
-            <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold text-foreground mt-2 leading-tight">
-              Developer Profile <br />
-              <span className="text-gradient text-4xl sm:text-6xl md:text-7xl font-extrabold">&amp; Core Compilations</span>
-            </h2>
-          </div>
-        }
-      >
-        <div className="w-full h-full bg-[#0d1117] text-[#c9d1d9] font-mono text-xs sm:text-sm p-4 sm:p-6 overflow-y-auto border border-border/40 rounded-xl shadow-2xl flex flex-col justify-start text-left">
-          <div className="flex items-center gap-1.5 border-b border-border/30 pb-3 mb-4">
-            <span className="h-3 w-3 rounded-full bg-[#ff5f56]" />
-            <span className="h-3 w-3 rounded-full bg-[#ffbd2e]" />
-            <span className="h-3 w-3 rounded-full bg-[#27c93f]" />
-            <span className="ml-2 text-[10px] text-muted-foreground">arghya_jana_session.sh</span>
-          </div>
-          <div className="flex-1 space-y-4">
-            <div>
-              <span className="text-[#ff7b72]">guest@arghyajana.dev</span>:<span className="text-[#79c0ff]">~</span>$ cat info.json
-              <pre className="text-[#a5d6ff] mt-2 whitespace-pre-wrap pl-4">
-{`{
-  "name": "Arghya Jana",
-  "role": "Computer Science Engineering Student",
-  "focus": "Full Stack Development & Systems Engineering",
-  "location": "Kolkata, India",
-  "university": "Heritage Institute of Technology",
-  "interests": ["Algorithms", "Web Development", "AI Integration", "Graphics"]
-}`}
-              </pre>
-            </div>
-            <div>
-              <span className="text-[#ff7b72]">guest@arghyajana.dev</span>:<span className="text-[#79c0ff]">~</span>$ ./skills.sh --list
-              <div className="mt-2 pl-4 grid grid-cols-1 sm:grid-cols-2 gap-2 text-[#79c0ff]">
-                <div>• HTML / CSS / JavaScript</div>
-                <div>• React.js / Vite</div>
-                <div>• Tailwind CSS</div>
-                <div>• Supabase / Backend integration</div>
-                <div>• Git / GitHub workflow</div>
-                <div>• TypeScript / Next.js</div>
-              </div>
-            </div>
-            <div>
-              <span className="text-[#ff7b72]">guest@arghyajana.dev</span>:<span className="text-[#79c0ff]">~</span>$ <span className="animate-pulse">_</span>
-            </div>
-          </div>
-        </div>
-      </ContainerScroll>
+    <section className="py-16 md:py-24 px-5 flex items-center justify-center text-center">
+      <div>
+        <p className="font-mono text-xs text-primary uppercase tracking-widest mb-4">// developer profile</p>
+        <h2 className="text-4xl sm:text-6xl md:text-7xl font-extrabold leading-tight tracking-tight text-gradient">
+          Developer Profile
+        </h2>
+      </div>
     </section>
   );
 }
@@ -236,9 +193,7 @@ function Portfolio() {
       <Nav active={!isLoading} />
       <main className="relative z-10">
         <Hero active={!isLoading} />
-        <ClientOnly>
-          <ShowCaseScroll />
-        </ClientOnly>
+        <DeveloperProfileBanner />
         <About />
         <Skills />
         <Projects />
