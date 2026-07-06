@@ -658,7 +658,7 @@ function Activities() {
       <div className="mx-auto max-w-6xl">
         <SectionHeading label="04 / activities" title="Beyond the curriculum" />
         <div className="reveal mt-16 flex min-h-[380px] w-full items-center justify-center">
-          <div className="w-full max-w-xl flex justify-center pl-0 pr-8 sm:pr-24">
+          <div className="w-full max-w-xl flex justify-center px-0 md:pr-24">
             <DisplayCards cards={cards} />
           </div>
         </div>
