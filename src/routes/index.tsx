@@ -591,26 +591,32 @@ function About() {
       <div className="mx-auto max-w-6xl">
         <SectionHeading label="01 / about" title="A quick introduction" />
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <SlideLeft className="space-y-4 text-muted-foreground leading-relaxed">
-            <p>
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.2 }}
+            className="space-y-4 text-muted-foreground leading-relaxed"
+          >
+            <motion.p variants={fadeLeft}>
               I'm <span className="text-foreground font-medium">Arghya Jana</span>, a first-year
               B.Tech CSE student at <span className="text-primary">Heritage Institute of Technology</span>
               {" "}(affiliated to MAKAUT), graduating in 2029.
-            </p>
-            <p>
+            </motion.p>
+            <motion.p variants={fadeLeft}>
               Currently maintaining an <span className="text-foreground">SGPA of 9.53</span>, I'm
               focused on building strong fundamentals in computer science — from data structures
               and algorithms to systems and software engineering principles.
-            </p>
-            <p>
+            </motion.p>
+            <motion.p variants={fadeLeft}>
               Outside the classroom, I take part in student communities and tech events to
               broaden my perspective and meet people building interesting things.
-            </p>
-            <div className="flex flex-wrap gap-2 pt-4">
+            </motion.p>
+            <motion.div variants={fadeUp} className="flex flex-wrap gap-2 pt-4">
               <Chip>WELCOME.YML — ACM HITK Student Chapter</Chip>
               <Chip>E-SUMMIT 2025 — EDIC</Chip>
-            </div>
-          </SlideLeft>
+            </motion.div>
+          </motion.div>
 
           {/* Timeline */}
           <SlideRight className="rounded-xl border border-border bg-surface/60 backdrop-blur p-6">
