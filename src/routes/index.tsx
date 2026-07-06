@@ -651,12 +651,11 @@ function Projects() {
           <span className="text-primary">//</span> sample cards — real projects coming soon
         </p>
         <div className="mt-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="reveal-stagger grid grid-cols-1 md:grid-cols-2 gap-6">
             {PROJECTS.map((p, i) => (
             <article
               key={p.title}
               className="reveal group project-card-custom p-6"
-              style={{ animationDelay: `${i * 80}ms` }}
             >
               <div className="flex items-start justify-between">
                 <div className="font-mono text-xs text-muted-foreground">
@@ -826,8 +825,8 @@ function Contact() {
 
 
         <div className="mt-12 grid md:grid-cols-5 gap-6">
-          {/* Form card */}
-          <div className="md:col-span-3 reveal">
+          {/* Form card — slides in from left */}
+          <div className="md:col-span-3 reveal reveal-left">
             <div className="rounded-lg border border-border bg-surface/40 overflow-hidden">
               <div className="flex items-center gap-2 border-b border-border px-4 py-2.5 bg-surface/60">
                 <span className="h-2.5 w-2.5 rounded-full bg-red-500/70" />
@@ -912,8 +911,8 @@ function Contact() {
             </div>
           </div>
 
-          {/* Direct links */}
-          <div className="md:col-span-2 reveal">
+          {/* Direct links — slides in from right */}
+          <div className="md:col-span-2 reveal reveal-right">
             <div className="h-full rounded-lg border border-border bg-surface/40 p-5 sm:p-6 flex flex-col">
               <div className="font-mono text-xs text-muted-foreground">contact.info</div>
               <div className="mt-4">
