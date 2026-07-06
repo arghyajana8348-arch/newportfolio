@@ -26,6 +26,7 @@ import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import { ClientOnly } from "@/components/ClientOnly";
 import { Dock, DockIcon, DockItem, DockLabel } from "@/components/ui/dock";
 import DisplayCards from "@/components/ui/display-cards";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 const Spline = lazy(() => import("@splinetool/react-spline"));
 
 function NeonAnchor({
@@ -409,13 +410,20 @@ function Hero() {
             style={{ display: isRobotVisible ? 'block' : 'none' }}
             className="absolute -top-[40px] left-0 -right-[80px] lg:left-[90px] lg:-right-[170px] -bottom-[100px] overflow-hidden"
           >
-            <Suspense fallback={
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+            <ErrorBoundary fallback={
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
+                <span className="text-2xl mb-2">🤖</span>
+                <span className="text-xs font-mono text-muted-foreground">Could not load 3D Robot</span>
               </div>
             }>
-              <Spline scene="https://prod.spline.design/sVeEmN1NRk0vpwDo/scene.splinecode" onLoad={handleSplineLoad} />
-            </Suspense>
+              <Suspense fallback={
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+                </div>
+              }>
+                <Spline scene="https://prod.spline.design/sVeEmN1NRk0vpwDo/scene.splinecode" onLoad={handleSplineLoad} />
+              </Suspense>
+            </ErrorBoundary>
           </div>
         </div>
       </div>
