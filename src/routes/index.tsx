@@ -620,17 +620,40 @@ function About() {
               <span className="h-2.5 w-2.5 rounded-full bg-[#27c93f]" />
               <span className="ml-2">education</span>
             </div>
-            <ol className="relative ml-3 border-l border-border space-y-7">
-              {timeline.map((t) => (
-                <li key={t.title} className="pl-6 relative">
-                  <span className="absolute -left-[7px] top-1.5 h-3 w-3 rounded-full bg-primary glow-cyan" />
+            <motion.ol
+              variants={stagger}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.3 }}
+              className="relative ml-3 border-l border-border space-y-7"
+            >
+              {timeline.map((t, i) => (
+                <motion.li
+                  key={t.title}
+                  variants={{
+                    hidden: { opacity: 0, x: -20 },
+                    show: {
+                      opacity: 1,
+                      x: 0,
+                      transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] as const, delay: i * 0.12 },
+                    },
+                  }}
+                  className="pl-6 relative"
+                >
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    whileInView={{ scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.1 + i * 0.12, type: "spring", stiffness: 300 }}
+                    className="absolute -left-[7px] top-1.5 h-3 w-3 rounded-full bg-primary glow-cyan"
+                  />
                   <div className="font-mono text-xs text-primary">[{t.year}]</div>
                   <div className="mt-1 font-semibold text-foreground">{t.title}</div>
                   <div className="text-sm text-muted-foreground">{t.org}</div>
                   <div className="font-mono text-xs mt-1 text-accent">{t.score}</div>
-                </li>
+                </motion.li>
               ))}
-            </ol>
+            </motion.ol>
           </SlideRight>
         </div>
       </div>
