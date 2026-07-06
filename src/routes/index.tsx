@@ -137,7 +137,7 @@ function ShowCaseScroll() {
             </div>
             <div>
               <span className="text-[#ff7b72]">guest@arghyajana.dev</span>:<span className="text-[#79c0ff]">~</span>$ ./skills.sh --list
-              <div className="mt-2 pl-4 grid grid-cols-2 gap-2 text-[#79c0ff]">
+              <div className="mt-2 pl-4 grid grid-cols-1 sm:grid-cols-2 gap-2 text-[#79c0ff]">
                 <div>• HTML / CSS / JavaScript</div>
                 <div>• React.js / Vite</div>
                 <div>• Tailwind CSS</div>
@@ -310,7 +310,8 @@ function Nav({ active = false }: { active?: boolean }) {
 
 
           <NeonAnchor href="#contact" variant="default" size="sm" className="text-xs whitespace-nowrap">
-            let's talk →
+            <span className="hidden sm:inline">let's talk →</span>
+            <span className="inline sm:hidden">talk →</span>
           </NeonAnchor>
         </div>
       </nav>
@@ -504,7 +505,7 @@ function Hero({ active = false }: { active?: boolean }) {
           variants={robotVariants}
           initial="initial"
           animate={active ? "animate" : "initial"}
-          className="relative aspect-square w-full max-w-[280px] sm:max-w-[360px] lg:max-w-[480px] h-[340px] sm:h-auto mx-auto overflow-hidden"
+          className="relative aspect-square w-full max-w-[280px] sm:max-w-[360px] lg:max-w-[480px] h-[340px] sm:h-auto mx-auto overflow-hidden pointer-events-none lg:pointer-events-auto"
         >
           <div 
             style={{ display: isRobotVisible ? 'block' : 'none' }}
