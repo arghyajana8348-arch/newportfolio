@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState, lazy, Suspense } from "react";
+import { createContext, useContext, useEffect, useRef, useState, lazy, Suspense } from "react";
 import { 
   FileText, 
   Home, 
@@ -26,11 +26,13 @@ import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import { ClientOnly } from "@/components/ClientOnly";
 import { Dock, DockIcon, DockItem, DockLabel } from "@/components/ui/dock";
 import DisplayCards from "@/components/ui/display-cards";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import LoadingScreen from "@/components/LoadingScreen";
 const Spline = lazy(() => import("@splinetool/react-spline"));
 
 // ---------- Scroll Animation Primitives ----------
+const ReadyContext = createContext(false);
+
 const fadeUp = {
   hidden: { opacity: 0, y: 36 },
   show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const } },
@@ -49,11 +51,12 @@ const stagger = {
 };
 
 function FadeUp({ children, delay = 0, className }: { children: React.ReactNode; delay?: number; className?: string }) {
+  const ready = useContext(ReadyContext);
   return (
     <motion.div
       variants={fadeUp}
       initial="hidden"
-      whileInView="show"
+      {...(ready ? { whileInView: "show" } : { animate: "hidden" })}
       viewport={{ once: true, amount: 0.15 }}
       transition={{ delay }}
       className={className}
@@ -64,11 +67,12 @@ function FadeUp({ children, delay = 0, className }: { children: React.ReactNode;
 }
 
 function SlideLeft({ children, delay = 0, className }: { children: React.ReactNode; delay?: number; className?: string }) {
+  const ready = useContext(ReadyContext);
   return (
     <motion.div
       variants={fadeLeft}
       initial="hidden"
-      whileInView="show"
+      {...(ready ? { whileInView: "show" } : { animate: "hidden" })}
       viewport={{ once: true, amount: 0.15 }}
       transition={{ delay }}
       className={className}
@@ -79,11 +83,12 @@ function SlideLeft({ children, delay = 0, className }: { children: React.ReactNo
 }
 
 function SlideRight({ children, delay = 0, className }: { children: React.ReactNode; delay?: number; className?: string }) {
+  const ready = useContext(ReadyContext);
   return (
     <motion.div
       variants={fadeRight}
       initial="hidden"
-      whileInView="show"
+      {...(ready ? { whileInView: "show" } : { animate: "hidden" })}
       viewport={{ once: true, amount: 0.15 }}
       transition={{ delay }}
       className={className}
@@ -269,14 +274,20 @@ function FloatingDock() {
 }
 
 // Client-only wrapper that manages loading state and animations
-function PortfolioClient() {
+function PortfolioClient({ onReady }: { onReady: () => void }) {
   const [isLoading, setIsLoading] = useState(true);
+
+  const handleComplete = () => {
+    setIsLoading(false);
+    // Wait for the exit animation to finish before unblocking scroll animations
+    setTimeout(onReady, 550);
+  };
 
   return (
     <>
       <AnimatePresence mode="wait">
         {isLoading && (
-          <LoadingScreen onComplete={() => setIsLoading(false)} />
+          <LoadingScreen onComplete={handleComplete} />
         )}
       </AnimatePresence>
       <Hero active={!isLoading} />
@@ -286,14 +297,16 @@ function PortfolioClient() {
 
 function Portfolio() {
   useReveal();
+  const [isReady, setIsReady] = useState(false);
 
   return (
+    <ReadyContext.Provider value={isReady}>
     <div className="relative min-h-screen overflow-x-hidden font-sans">
       <ParticleField />
       <Nav />
-      <main>
+      <main className="relative z-10">
         <ClientOnly>
-          <PortfolioClient />
+          <PortfolioClient onReady={() => setIsReady(true)} />
         </ClientOnly>
         <ClientOnly>
           <ShowCaseScroll />
@@ -310,6 +323,7 @@ function Portfolio() {
       </ClientOnly>
       <Toaster theme="dark" position="bottom-right" richColors />
     </div>
+    </ReadyContext.Provider>
   );
 }
 
@@ -581,16 +595,38 @@ function Hero({ active = false }: { active?: boolean }) {
 
 // ---------- About ----------
 function About() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  
+  // Track scroll progress of the section
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  // Map scroll progress to subtle animations
+  const yParallax = useTransform(scrollYProgress, [0, 1], [30, -30]);
+  const blobY = useTransform(scrollYProgress, [0, 1], [-80, 80]);
+  
+  // Connector line draws itself between 12% and 55% of the section's scroll path
+  const lineProgress = useTransform(scrollYProgress, [0.12, 0.55], [0, 1]);
+
   const timeline = [
     { year: "2022", title: "Secondary (Class X)", org: "WBCSE", score: "94.5%" },
     { year: "2024", title: "Higher Secondary — PCMB", org: "WBCHSE", score: "93%" },
     { year: "2025–29", title: "B.Tech, Computer Science & Engineering", org: "Heritage Institute of Technology (MAKAUT)", score: "SGPA 9.53" },
   ];
+
   return (
-    <section id="about" className="py-24 px-5">
-      <div className="mx-auto max-w-6xl">
+    <section ref={sectionRef} id="about" className="relative py-24 px-5 overflow-hidden">
+      {/* Scroll-animated background glow */}
+      <motion.div
+        style={{ y: blobY }}
+        className="absolute right-0 top-1/4 w-[350px] h-[350px] rounded-full bg-gradient-to-tr from-primary/10 to-accent/15 blur-[120px] pointer-events-none -z-10"
+      />
+      
+      <div className="mx-auto max-w-6xl relative z-10">
         <SectionHeading label="01 / about" title="A quick introduction" />
-        <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           <motion.div
             variants={stagger}
             initial="hidden"
@@ -618,49 +654,60 @@ function About() {
             </motion.div>
           </motion.div>
 
-          {/* Timeline */}
-          <SlideRight className="rounded-xl border border-border bg-surface/60 backdrop-blur p-6">
-            <div className="font-mono text-xs text-muted-foreground mb-5 flex items-center gap-2">
-              <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f56]" />
-              <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
-              <span className="h-2.5 w-2.5 rounded-full bg-[#27c93f]" />
-              <span className="ml-2">education</span>
-            </div>
-            <motion.ol
-              variants={stagger}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, amount: 0.3 }}
-              className="relative ml-3 border-l border-border space-y-7"
-            >
-              {timeline.map((t, i) => (
-                <motion.li
-                  key={t.title}
-                  variants={{
-                    hidden: { opacity: 0, x: -20 },
-                    show: {
-                      opacity: 1,
-                      x: 0,
-                      transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] as const, delay: i * 0.12 },
-                    },
-                  }}
-                  className="pl-6 relative"
-                >
-                  <motion.span
-                    initial={{ scale: 0 }}
-                    whileInView={{ scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: 0.1 + i * 0.12, type: "spring", stiffness: 300 }}
-                    className="absolute -left-[7px] top-1.5 h-3 w-3 rounded-full bg-primary glow-cyan"
+          {/* Timeline with Scroll Parallax */}
+          <motion.div style={{ y: yParallax }} className="w-full">
+            <SlideRight className="project-card-custom rounded-xl border border-border bg-surface/60 backdrop-blur p-6 relative overflow-hidden">
+              <div className="font-mono text-xs text-muted-foreground mb-5 flex items-center gap-2 relative z-10">
+                <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f56]" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[#27c93f]" />
+                <span className="ml-2">education</span>
+              </div>
+              
+              <motion.ol
+                variants={stagger}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.3 }}
+                className="relative ml-3 space-y-7 z-10"
+              >
+                {/* Animated scroll connector line */}
+                <div className="absolute left-0 top-2 bottom-2 w-[2px] bg-border/20 rounded-full">
+                  <motion.div
+                    className="w-full h-full bg-gradient-to-b from-primary via-accent to-pink-500 origin-top"
+                    style={{ scaleY: lineProgress }}
                   />
-                  <div className="font-mono text-xs text-primary">[{t.year}]</div>
-                  <div className="mt-1 font-semibold text-foreground">{t.title}</div>
-                  <div className="text-sm text-muted-foreground">{t.org}</div>
-                  <div className="font-mono text-xs mt-1 text-accent">{t.score}</div>
-                </motion.li>
-              ))}
-            </motion.ol>
-          </SlideRight>
+                </div>
+
+                {timeline.map((t, i) => (
+                  <motion.li
+                    key={t.title}
+                    variants={{
+                      hidden: { opacity: 0, x: -20 },
+                      show: {
+                        opacity: 1,
+                        x: 0,
+                        transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] as const, delay: i * 0.12 },
+                      },
+                    }}
+                    className="pl-6 relative"
+                  >
+                    <motion.span
+                      initial={{ scale: 0 }}
+                      whileInView={{ scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: 0.1 + i * 0.12, type: "spring", stiffness: 300 }}
+                      className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full bg-primary glow-cyan"
+                    />
+                    <div className="font-mono text-xs text-primary">[{t.year}]</div>
+                    <div className="mt-1 font-semibold text-foreground">{t.title}</div>
+                    <div className="text-sm text-muted-foreground">{t.org}</div>
+                    <div className="font-mono text-xs mt-1 text-accent">{t.score}</div>
+                  </motion.li>
+                ))}
+              </motion.ol>
+            </SlideRight>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -1057,7 +1104,7 @@ function Contact() {
 // ---------- Footer ----------
 function Footer() {
   return (
-    <footer className="border-t border-border py-8 px-5 mt-10">
+    <footer className="relative z-10 border-t border-border py-8 px-5 mt-10">
       <div className="mx-auto max-w-6xl flex flex-col sm:flex-row items-center justify-between gap-3 font-mono text-xs text-muted-foreground">
         <div>© 2026 Arghya Jana</div>
         <div>
@@ -1071,11 +1118,12 @@ function Footer() {
 // ---------- Bits ----------
 function SectionHeading({ label, title }: { label: string; title: string }) {
   const cleanLabel = label.replace(/^\s*\d+\s*\/\s*/, "");
+  const ready = useContext(ReadyContext);
   return (
     <motion.div
       variants={stagger}
       initial="hidden"
-      whileInView="show"
+      {...(ready ? { whileInView: "show" } : { animate: "hidden" })}
       viewport={{ once: true, amount: 0.3 }}
     >
       <motion.div variants={fadeUp} className="font-mono text-sm sm:text-base uppercase tracking-[0.25em] text-primary">
