@@ -26,7 +26,8 @@ import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import { ClientOnly } from "@/components/ClientOnly";
 import { Dock, DockIcon, DockItem, DockLabel } from "@/components/ui/dock";
 import DisplayCards from "@/components/ui/display-cards";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { motion, AnimatePresence } from "framer-motion";
+import LoadingScreen from "@/components/LoadingScreen";
 const Spline = lazy(() => import("@splinetool/react-spline"));
 
 function NeonAnchor({
@@ -204,14 +205,37 @@ function FloatingDock() {
   );
 }
 
+function PortfolioClient({ onComplete }: { onComplete: () => void }) {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleComplete = () => {
+    setIsLoading(false);
+    // Wait for the exit animation to finish before unblocking scroll animations
+    setTimeout(onComplete, 550);
+  };
+
+  return (
+    <AnimatePresence mode="wait">
+      {isLoading && (
+        <LoadingScreen onComplete={handleComplete} />
+      )}
+    </AnimatePresence>
+  );
+}
+
 function Portfolio() {
   useReveal();
+  const [isLoading, setIsLoading] = useState(true);
+
   return (
     <div className="relative min-h-screen overflow-x-hidden font-sans">
+      <ClientOnly>
+        <PortfolioClient onComplete={() => setIsLoading(false)} />
+      </ClientOnly>
       <ParticleField />
-      <Nav />
-      <main>
-        <Hero />
+      <Nav active={!isLoading} />
+      <main className="relative z-10">
+        <Hero active={!isLoading} />
         <ClientOnly>
           <ShowCaseScroll />
         </ClientOnly>
@@ -231,7 +255,7 @@ function Portfolio() {
 }
 
 // ---------- Nav ----------
-function Nav() {
+function Nav({ active = false }: { active?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -243,7 +267,10 @@ function Nav() {
   }, []);
 
   return (
-    <header
+    <motion.header
+      initial={{ opacity: 0, y: -20 }}
+      animate={active ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const, delay: 0.4 }}
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         scrolled
@@ -287,13 +314,13 @@ function Nav() {
           </NeonAnchor>
         </div>
       </nav>
-    </header>
+    </motion.header>
   );
 }
 
 
 // ---------- Hero ----------
-function Hero() {
+function Hero({ active = false }: { active?: boolean }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isRobotVisible, setIsRobotVisible] = useState(true);
 
@@ -366,66 +393,132 @@ function Hero() {
     }
   };
 
+  // Entrance variants
+  const containerVariants = {
+    initial: {},
+    animate: {
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.2,
+      }
+    }
+  };
+
+  const imageVariants = {
+    initial: { opacity: 0, scale: 0.85, y: -20 },
+    animate: { 
+      opacity: 1, 
+      scale: 1, 
+      y: 0,
+      transition: { duration: 1.0, ease: [0.16, 1, 0.3, 1] as const } 
+    }
+  };
+
+  const textVariants = {
+    initial: { opacity: 0, x: -40 },
+    animate: { 
+      opacity: 1, 
+      x: 0,
+      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const } 
+    }
+  };
+
+  const ctaVariants = {
+    initial: { opacity: 0, y: 25 },
+    animate: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const } 
+    }
+  };
+
+  const robotVariants = {
+    initial: { opacity: 0, scale: 0.9, x: 50 },
+    animate: { 
+      opacity: 1, 
+      scale: 1, 
+      x: 0,
+      transition: { duration: 1.4, ease: [0.16, 1, 0.3, 1] as const, delay: 0.4 } 
+    }
+  };
+
   return (
     <section ref={containerRef} id="home" className="relative flex min-h-screen items-center pt-24 pb-16">
       <div className="absolute inset-0 grid-bg pointer-events-none" aria-hidden />
       <div className="mx-auto grid max-w-6xl grid-cols-1 lg:grid-cols-[1.4fr_1fr] items-center gap-12 px-5 relative">
-        <div className="reveal">
-          <img
-            src={heroPhoto.url}
-            alt="Arghya Jana"
-            width={224}
-            height={224}
-            fetchPriority="high"
-            decoding="async"
-            className="mb-6 h-40 w-40 sm:h-48 sm:w-48 md:h-56 md:w-56 rounded-full object-cover object-center border-2 border-primary/70 shadow-[0_0_40px_-6px_var(--primary)]"
-          />
+        <motion.div 
+          variants={containerVariants}
+          initial="initial"
+          animate={active ? "animate" : "initial"}
+          className="flex flex-col"
+        >
+          <motion.div variants={imageVariants} className="mb-6 h-40 w-40 sm:h-48 sm:w-48 md:h-56 md:w-56 rounded-full overflow-hidden border-2 border-primary/70 shadow-[0_0_40px_-6px_var(--primary)]">
+            <img
+              src={heroPhoto.url}
+              alt="Arghya Jana"
+              width={224}
+              height={224}
+              fetchPriority="high"
+              decoding="async"
+              className="h-full w-full object-cover object-center"
+            />
+          </motion.div>
 
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight">
+          <motion.h1 
+            variants={textVariants}
+            className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight"
+          >
             Arghya <span className="text-gradient">Jana</span>
-          </h1>
-          <p className="mt-5 font-mono text-sm sm:text-base text-muted-foreground">
+          </motion.h1>
+          <motion.p 
+            variants={textVariants}
+            className="mt-5 font-mono text-sm sm:text-base text-muted-foreground"
+          >
             <span className="text-primary">&gt;</span> Computer Science Engineering Student
             <span className="mx-2 text-border">|</span>
             <span className="text-accent">Aspiring Software Engineer</span>
-          </p>
-          <p className="mt-6 max-w-xl text-base text-muted-foreground leading-relaxed">
+          </motion.p>
+          <motion.p 
+            variants={textVariants}
+            className="mt-6 max-w-xl text-base text-muted-foreground leading-relaxed"
+          >
             An aspiring engineering student with a strong foundation in computational logic,
             applying analytical skills toward impactful engineering work — with the long-term goal
             of growing into a leadership role.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          </motion.p>
+          <motion.div 
+            variants={ctaVariants}
+            className="mt-8 flex flex-wrap gap-3"
+          >
             <NeonAnchor href="#projects" variant="solid" size="lg" className="font-semibold">
               view projects
             </NeonAnchor>
             <NeonAnchor href="#contact" variant="default" size="lg">
               contact me
             </NeonAnchor>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Box */}
-        <div className="reveal relative aspect-square w-full max-w-[280px] sm:max-w-[360px] lg:max-w-[480px] h-[340px] sm:h-auto mx-auto overflow-hidden">
+        <motion.div 
+          variants={robotVariants}
+          initial="initial"
+          animate={active ? "animate" : "initial"}
+          className="relative aspect-square w-full max-w-[280px] sm:max-w-[360px] lg:max-w-[480px] h-[340px] sm:h-auto mx-auto overflow-hidden"
+        >
           <div 
             style={{ display: isRobotVisible ? 'block' : 'none' }}
             className="absolute -top-[40px] left-0 -right-[80px] lg:left-[90px] lg:-right-[170px] -bottom-[100px] overflow-hidden"
           >
-            <ErrorBoundary fallback={
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
-                <span className="text-2xl mb-2">🤖</span>
-                <span className="text-xs font-mono text-muted-foreground">Could not load 3D Robot</span>
+            <Suspense fallback={
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
               </div>
             }>
-              <Suspense fallback={
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-                </div>
-              }>
-                <Spline scene="https://prod.spline.design/sVeEmN1NRk0vpwDo/scene.splinecode" onLoad={handleSplineLoad} />
-              </Suspense>
-            </ErrorBoundary>
+              <Spline scene="https://prod.spline.design/sVeEmN1NRk0vpwDo/scene.splinecode" onLoad={handleSplineLoad} />
+            </Suspense>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

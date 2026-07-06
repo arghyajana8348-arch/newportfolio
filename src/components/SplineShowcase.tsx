@@ -1,5 +1,4 @@
 import { lazy, Suspense, useState } from "react";
-import { ErrorBoundary } from "./ErrorBoundary";
 
 const Spline = lazy(() => import("@splinetool/react-spline"));
 
@@ -30,16 +29,9 @@ function SplineCard({ model }: { model: SplineModel }) {
             <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
           </div>
         )}
-        <ErrorBoundary fallback={
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
-            <span className="text-xl mb-1">🎮</span>
-            <span className="text-xs font-mono text-muted-foreground">3D scene unavailable</span>
-          </div>
-        }>
-          <Suspense fallback={null}>
-            <Spline scene={model.scene} onLoad={() => setLoaded(true)} />
-          </Suspense>
-        </ErrorBoundary>
+        <Suspense fallback={null}>
+          <Spline scene={model.scene} onLoad={() => setLoaded(true)} />
+        </Suspense>
       </div>
       <div className="p-5 border-t border-border">
         <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors">
