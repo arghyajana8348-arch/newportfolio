@@ -293,10 +293,12 @@ function Nav() {
 
 // ---------- Hero ----------
 function Hero() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isRobotVisible, setIsRobotVisible] = useState(true);
+
   useEffect(() => {
-    // Hide the 'Built with Spline' watermark logo
+    // Hide 'Built with Spline' watermark logo
     const timer = setInterval(() => {
-      // 1. Target shadow root logos inside spline-viewer web components
       const splineViewers = document.querySelectorAll("spline-viewer");
       splineViewers.forEach((viewer) => {
         if (viewer.shadowRoot) {
@@ -310,7 +312,6 @@ function Hero() {
         }
       });
 
-      // 2. Target regular DOM links that direct to spline
       const links = document.querySelectorAll("a[href*='spline']");
       links.forEach((link) => {
         const linkHtml = link as HTMLElement;
@@ -318,7 +319,6 @@ function Hero() {
         linkHtml.style.setProperty("visibility", "hidden", "important");
         linkHtml.style.setProperty("opacity", "0", "important");
 
-        // Hide parent hierarchy up to 3 levels to hide containing wrapper boxes
         let parent = linkHtml.parentElement;
         for (let i = 0; i < 3; i++) {
           if (parent) {
@@ -331,7 +331,21 @@ function Hero() {
       });
     }, 250);
 
-    return () => clearInterval(timer);
+    // Setup intersection observer to pause WebGL rendering when scrolled off-screen
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsRobotVisible(entry.isIntersecting);
+      },
+      { threshold: 0.02 }
+    );
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      clearInterval(timer);
+      observer.disconnect();
+    };
   }, []);
 
   const handleSplineLoad = (splineApp: any) => {
@@ -352,7 +366,7 @@ function Hero() {
   };
 
   return (
-    <section id="home" className="relative flex min-h-screen items-center pt-24 pb-16">
+    <section ref={containerRef} id="home" className="relative flex min-h-screen items-center pt-24 pb-16">
       <div className="absolute inset-0 grid-bg pointer-events-none" aria-hidden />
       <div className="mx-auto grid max-w-6xl grid-cols-1 lg:grid-cols-[1.4fr_1fr] items-center gap-12 px-5 relative">
         <div className="reveal">
@@ -391,7 +405,10 @@ function Hero() {
 
         {/* Box */}
         <div className="reveal relative aspect-square w-full max-w-[280px] sm:max-w-[360px] lg:max-w-[480px] mx-auto overflow-hidden">
-          <div className="absolute -top-[40px] left-0 -right-[80px] lg:left-[90px] lg:-right-[170px] -bottom-[100px] overflow-hidden">
+          <div 
+            style={{ display: isRobotVisible ? 'block' : 'none' }}
+            className="absolute -top-[40px] left-0 -right-[80px] lg:left-[90px] lg:-right-[170px] -bottom-[100px] overflow-hidden"
+          >
             <Suspense fallback={
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />

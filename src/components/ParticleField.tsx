@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react'
+import { useRef, useMemo, useState, useEffect } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 
@@ -8,8 +8,6 @@ interface ParticlesProps {
 
 function Particles({ count = 2000 }: ParticlesProps) {
   const meshRef = useRef<THREE.Points>(null)
-
-  const { viewport } = useThree()
 
   const [positions, velocities] = useMemo(() => {
     const pos = new Float32Array(count * 3)
@@ -112,6 +110,7 @@ function FloatingGeometry() {
           wireframe
           transparent
           opacity={0.15}
+          depthWrite={false}
         />
       </mesh>
       <mesh ref={wireRef} position={[-3, 1, -3]}>
@@ -121,6 +120,7 @@ function FloatingGeometry() {
           wireframe
           transparent
           opacity={0.12}
+          depthWrite={false}
         />
       </mesh>
     </>
@@ -138,6 +138,17 @@ function GridFloor() {
 }
 
 export function ParticleField() {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
   return (
     <Canvas
       camera={{ position: [0, 0, 6], fov: 65 }}
@@ -150,12 +161,12 @@ export function ParticleField() {
         pointerEvents: 'none',
         zIndex: 0,
       }}
-      gl={{ antialias: false, alpha: true }}
-      dpr={[1, 1.5]}
+      gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
+      dpr={isMobile ? 1 : [1, 1.5]}
     >
-      <Particles count={1500} />
-      <FloatingGeometry />
-      <GridFloor />
+      <Particles count={isMobile ? 350 : 1500} />
+      {!isMobile && <FloatingGeometry />}
+      {!isMobile && <GridFloor />}
     </Canvas>
   )
 }
