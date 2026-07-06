@@ -30,6 +30,69 @@ import { motion, AnimatePresence } from "framer-motion";
 import LoadingScreen from "@/components/LoadingScreen";
 const Spline = lazy(() => import("@splinetool/react-spline"));
 
+// ---------- Scroll Animation Primitives ----------
+const fadeUp = {
+  hidden: { opacity: 0, y: 36 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const } },
+};
+const fadeLeft = {
+  hidden: { opacity: 0, x: -36 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const } },
+};
+const fadeRight = {
+  hidden: { opacity: 0, x: 36 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const } },
+};
+const stagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.12, delayChildren: 0.05 } },
+};
+
+function FadeUp({ children, delay = 0, className }: { children: React.ReactNode; delay?: number; className?: string }) {
+  return (
+    <motion.div
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ delay }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function SlideLeft({ children, delay = 0, className }: { children: React.ReactNode; delay?: number; className?: string }) {
+  return (
+    <motion.div
+      variants={fadeLeft}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ delay }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function SlideRight({ children, delay = 0, className }: { children: React.ReactNode; delay?: number; className?: string }) {
+  return (
+    <motion.div
+      variants={fadeRight}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ delay }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 function NeonAnchor({
   href,
   variant = "default",
@@ -528,7 +591,7 @@ function About() {
       <div className="mx-auto max-w-6xl">
         <SectionHeading label="01 / about" title="A quick introduction" />
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div className="reveal space-y-4 text-muted-foreground leading-relaxed">
+          <SlideLeft className="space-y-4 text-muted-foreground leading-relaxed">
             <p>
               I'm <span className="text-foreground font-medium">Arghya Jana</span>, a first-year
               B.Tech CSE student at <span className="text-primary">Heritage Institute of Technology</span>
@@ -547,10 +610,10 @@ function About() {
               <Chip>WELCOME.YML — ACM HITK Student Chapter</Chip>
               <Chip>E-SUMMIT 2025 — EDIC</Chip>
             </div>
-          </div>
+          </SlideLeft>
 
           {/* Timeline */}
-          <div className="reveal rounded-xl border border-border bg-surface/60 backdrop-blur p-6">
+          <SlideRight className="rounded-xl border border-border bg-surface/60 backdrop-blur p-6">
             <div className="font-mono text-xs text-muted-foreground mb-5 flex items-center gap-2">
               <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f56]" />
               <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
@@ -568,7 +631,7 @@ function About() {
                 </li>
               ))}
             </ol>
-          </div>
+          </SlideRight>
         </div>
       </div>
     </section>
@@ -586,7 +649,7 @@ function Skills() {
     <section id="skills" className="py-24 px-5">
       <div className="mx-auto max-w-6xl">
         <SectionHeading label="02 / skills" title="What I'm building with" />
-        <div className="reveal mt-10 rounded-xl border border-border bg-surface/60 backdrop-blur overflow-hidden">
+        <FadeUp className="mt-10 rounded-xl border border-border bg-surface/60 backdrop-blur overflow-hidden">
           <div className="flex items-center gap-2 px-4 py-2 border-b border-border font-mono text-xs text-muted-foreground">
             <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f56]" />
             <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
@@ -595,9 +658,15 @@ function Skills() {
           </div>
           <div className="p-6 font-mono text-sm">
             <div className="text-primary">skills list</div>
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <motion.div
+              variants={stagger}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.2 }}
+              className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6"
+            >
               {groups.map((g) => (
-                <div key={g.key} className="project-card-custom p-5">
+                <motion.div variants={fadeUp} key={g.key} className="project-card-custom p-5">
                   <div className="flex items-center justify-between">
                     <div className="text-foreground font-semibold">{g.label}</div>
                     <span className="text-[10px] rounded-full border border-accent/50 text-accent px-2 py-0.5">
@@ -614,14 +683,14 @@ function Skills() {
                       </span>
                     ))}
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
-            <div className="mt-6 text-muted-foreground">
+            </motion.div>
+            <FadeUp delay={0.3} className="mt-6 text-muted-foreground">
               "still learning — every commit counts."
-            </div>
+            </FadeUp>
           </div>
-        </div>
+        </FadeUp>
       </div>
     </section>
   );
@@ -650,16 +719,22 @@ function Projects() {
     <section id="projects" className="py-24 px-5">
       <div className="mx-auto max-w-6xl">
         <SectionHeading label="03 / projects" title="Things I've been building" />
-        <p className="reveal mt-3 text-sm text-muted-foreground font-mono">
+        <FadeUp className="mt-3 text-sm text-muted-foreground font-mono">
           <span className="text-primary">//</span> sample cards — real projects coming soon
-        </p>
-        <div className="mt-10">
+        </FadeUp>
+        <motion.div
+          variants={stagger}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.1 }}
+          className="mt-10"
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {PROJECTS.map((p, i) => (
-            <article
+            <motion.article
+              variants={fadeUp}
               key={p.title}
-              className="reveal group project-card-custom p-6"
-              style={{ animationDelay: `${i * 80}ms` }}
+              className="group project-card-custom p-6"
             >
               <div className="flex items-start justify-between">
                 <div className="font-mono text-xs text-muted-foreground">
@@ -709,10 +784,10 @@ function Projects() {
                   </span>
                 ))}
               </div>
-            </article>
+            </motion.article>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -767,11 +842,11 @@ function Activities() {
     <section id="activities" className="py-24 px-5">
       <div className="mx-auto max-w-6xl">
         <SectionHeading label="04 / activities" title="Beyond the curriculum" />
-        <div className="reveal mt-16 flex min-h-[380px] w-full items-center justify-center">
+        <FadeUp className="mt-16 flex min-h-[380px] w-full items-center justify-center">
           <div className="w-full max-w-xl flex justify-center px-0 md:pr-24">
             <DisplayCards cards={cards} />
           </div>
-        </div>
+        </FadeUp>
       </div>
     </section>
   );
@@ -823,14 +898,14 @@ function Contact() {
     <section id="contact" className="py-24 px-5">
       <div className="mx-auto max-w-6xl">
         <SectionHeading label="05 / contact" title="Let's connect" />
-        <p className="reveal mt-4 text-muted-foreground max-w-2xl">
+        <FadeUp className="mt-4 text-muted-foreground max-w-2xl">
           Open to learning opportunities, internships, hackathons, and study collaborations.
-        </p>
+        </FadeUp>
 
 
         <div className="mt-12 grid md:grid-cols-5 gap-6">
           {/* Form card */}
-          <div className="md:col-span-3 reveal">
+          <SlideLeft className="md:col-span-3">
             <div className="rounded-lg border border-border bg-surface/40 overflow-hidden">
               <div className="flex items-center gap-2 border-b border-border px-4 py-2.5 bg-surface/60">
                 <span className="h-2.5 w-2.5 rounded-full bg-red-500/70" />
@@ -913,10 +988,10 @@ function Contact() {
                 </button>
               </form>
             </div>
-          </div>
+          </SlideLeft>
 
           {/* Direct links */}
-          <div className="md:col-span-2 reveal">
+          <SlideRight className="md:col-span-2">
             <div className="h-full rounded-lg border border-border bg-surface/40 p-5 sm:p-6 flex flex-col">
               <div className="font-mono text-xs text-muted-foreground">contact.info</div>
               <div className="mt-4">
@@ -943,7 +1018,7 @@ function Contact() {
                 <span className="text-primary">›</span> usually replies within a day
               </div>
             </div>
-          </div>
+          </SlideRight>
         </div>
       </div>
     </section>
@@ -968,15 +1043,20 @@ function Footer() {
 function SectionHeading({ label, title }: { label: string; title: string }) {
   const cleanLabel = label.replace(/^\s*\d+\s*\/\s*/, "");
   return (
-    <div className="reveal">
-      <div className="font-mono text-sm sm:text-base uppercase tracking-[0.25em] text-primary">
+    <motion.div
+      variants={stagger}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.3 }}
+    >
+      <motion.div variants={fadeUp} className="font-mono text-sm sm:text-base uppercase tracking-[0.25em] text-primary">
         {cleanLabel}
-      </div>
-      <h2 className="mt-4 text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.05]">
+      </motion.div>
+      <motion.h2 variants={fadeUp} className="mt-4 text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.05]">
         {title}
-      </h2>
-      <div className="mt-5 h-1 w-24 rounded-full bg-gradient-to-r from-primary to-accent" />
-    </div>
+      </motion.h2>
+      <motion.div variants={fadeUp} className="mt-5 h-1 w-24 rounded-full bg-gradient-to-r from-primary to-accent" />
+    </motion.div>
   );
 }
 
