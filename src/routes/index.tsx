@@ -177,8 +177,8 @@ function FloatingDock() {
   ];
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-full pointer-events-auto">
-      <Dock className="items-end pb-3 bg-[#0d1322]/80 border border-white/10 backdrop-blur-md px-3 rounded-full shadow-[0_12px_40px_rgba(0,0,0,0.5)]">
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-full pointer-events-auto scale-85 sm:scale-100 origin-bottom">
+      <Dock className="items-end pb-3 bg-[#0d1322]/80 border border-white/10 backdrop-blur-md px-2 sm:px-3 rounded-full shadow-[0_12px_40px_rgba(0,0,0,0.5)]">
         {dockItems.map((item, idx) => (
           <DockItem
             key={idx}
@@ -341,6 +341,9 @@ function Hero() {
       }
       if (splineApp.camera.position) {
         splineApp.camera.position.z *= 1.35;
+        if (typeof window !== "undefined" && window.innerWidth < 1024) {
+          splineApp.camera.position.x -= 160;
+        }
       }
       if (typeof splineApp.camera.updateProjectionMatrix === "function") {
         splineApp.camera.updateProjectionMatrix();
@@ -388,7 +391,7 @@ function Hero() {
 
         {/* Box */}
         <div className="reveal relative aspect-square w-full max-w-[280px] sm:max-w-[360px] lg:max-w-[480px] mx-auto overflow-hidden">
-          <div className="absolute -top-[40px] left-[90px] -right-[170px] -bottom-[100px] overflow-hidden">
+          <div className="absolute -top-[40px] left-0 -right-[80px] lg:left-[90px] lg:-right-[170px] -bottom-[100px] overflow-hidden">
             <Suspense fallback={
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
@@ -616,7 +619,7 @@ function Activities() {
       iconClassName: "text-purple-500",
       titleClassName: "text-purple-500",
       className:
-        "[grid-area:stack] hover:-translate-y-12 before:absolute before:w-[100%] before:outline-1 before:rounded-xl before:outline-border before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-background/50 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0 z-[1]",
+        "[grid-area:stack] hover:-translate-y-6 sm:hover:-translate-y-12 before:absolute before:w-[100%] before:outline-1 before:rounded-xl before:outline-border before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-background/50 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0 z-[1]",
     },
     {
       icon: <Terminal className="size-4 text-emerald-300" />,
@@ -626,7 +629,7 @@ function Activities() {
       iconClassName: "text-emerald-500",
       titleClassName: "text-emerald-500",
       className:
-        "[grid-area:stack] translate-x-8 translate-y-6 sm:translate-x-12 sm:translate-y-8 hover:-translate-y-6 before:absolute before:w-[100%] before:outline-1 before:rounded-xl before:outline-border before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-background/50 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0 z-[2]",
+        "[grid-area:stack] translate-x-3 translate-y-3 sm:translate-x-12 sm:translate-y-8 hover:-translate-y-2 sm:hover:-translate-y-6 before:absolute before:w-[100%] before:outline-1 before:rounded-xl before:outline-border before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-background/50 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0 z-[2]",
     },
     {
       icon: <Gamepad2 className="size-4 text-red-300" />,
@@ -636,7 +639,7 @@ function Activities() {
       iconClassName: "text-red-500",
       titleClassName: "text-red-500",
       className:
-        "[grid-area:stack] translate-x-16 translate-y-12 sm:translate-x-24 sm:translate-y-16 hover:translate-y-2 before:absolute before:w-[100%] before:outline-1 before:rounded-xl before:outline-border before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-background/50 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0 z-[3]",
+        "[grid-area:stack] translate-x-6 translate-y-6 sm:translate-x-24 sm:translate-y-16 hover:translate-y-1 sm:hover:translate-y-2 before:absolute before:w-[100%] before:outline-1 before:rounded-xl before:outline-border before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-background/50 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0 z-[3]",
     },
     {
       icon: <Sparkles className="size-4 text-blue-300" />,
@@ -646,7 +649,7 @@ function Activities() {
       iconClassName: "text-blue-500",
       titleClassName: "text-blue-500",
       className:
-        "[grid-area:stack] translate-x-24 translate-y-18 sm:translate-x-36 sm:translate-y-24 hover:translate-y-8 z-[4]",
+        "[grid-area:stack] translate-x-9 translate-y-9 sm:translate-x-36 sm:translate-y-24 hover:translate-y-4 sm:hover:translate-y-8 z-[4]",
     },
   ];
 
