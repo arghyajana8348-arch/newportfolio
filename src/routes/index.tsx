@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState, lazy, Suspense } from "react";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { 
   FileText, 
   Home, 
@@ -86,19 +87,7 @@ const NAV = [
   { id: "contact", label: "contact" },
 ];
 
-function useReveal() {
-  const ref = useRef<HTMLElement | null>(null);
-  useEffect(() => {
-    const els = document.querySelectorAll<HTMLElement>(".reveal");
-    const io = new IntersectionObserver(
-      (entries) => entries.forEach((e) => e.isIntersecting && e.target.classList.add("in-view")),
-      { threshold: 0.12 },
-    );
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, []);
-  return ref;
-}
+// useReveal replaced by the extracted useScrollReveal hook (src/hooks/useScrollReveal.ts)
 
 function ShowCaseScroll() {
   return (
@@ -223,7 +212,7 @@ function PortfolioClient({ onComplete }: { onComplete: () => void }) {
 }
 
 function Portfolio() {
-  useReveal();
+  useScrollReveal();
   const [isLoading, setIsLoading] = useState(true);
 
   return (

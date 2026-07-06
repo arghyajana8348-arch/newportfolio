@@ -1,3 +1,4 @@
+/* stylelint-disable */
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -87,11 +88,67 @@
   50%      { box-shadow: 0 0 70px -10px color-mix(in oklab, var(--accent) 60%, transparent); }
 }
 
+/* ============================================
+   SCROLL REVEAL ANIMATIONS (ported from aushman)
+   ============================================ */
+
+/* Base: hidden until intersected */
 .reveal {
-  /* No animation — content always visible */
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+/* Triggered state — added by useScrollReveal hook */
 .reveal.in-view {
-  /* kept for compatibility */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Directional variants */
+.reveal.reveal-left {
+  transform: translateX(-40px);
+}
+.reveal.reveal-left.in-view {
+  transform: translateX(0);
+}
+
+.reveal.reveal-right {
+  transform: translateX(40px);
+}
+.reveal.reveal-right.in-view {
+  transform: translateX(0);
+}
+
+.reveal.reveal-scale {
+  transform: scale(0.88);
+}
+.reveal.reveal-scale.in-view {
+  transform: scale(1);
+}
+
+/* Staggered delays for grid/flex children */
+.reveal-stagger > .reveal:nth-child(1)  { transition-delay: 0.00s; }
+.reveal-stagger > .reveal:nth-child(2)  { transition-delay: 0.06s; }
+.reveal-stagger > .reveal:nth-child(3)  { transition-delay: 0.12s; }
+.reveal-stagger > .reveal:nth-child(4)  { transition-delay: 0.18s; }
+.reveal-stagger > .reveal:nth-child(5)  { transition-delay: 0.24s; }
+.reveal-stagger > .reveal:nth-child(6)  { transition-delay: 0.30s; }
+.reveal-stagger > .reveal:nth-child(7)  { transition-delay: 0.36s; }
+.reveal-stagger > .reveal:nth-child(8)  { transition-delay: 0.42s; }
+.reveal-stagger > .reveal:nth-child(9)  { transition-delay: 0.48s; }
+.reveal-stagger > .reveal:nth-child(10) { transition-delay: 0.54s; }
+.reveal-stagger > .reveal:nth-child(11) { transition-delay: 0.60s; }
+.reveal-stagger > .reveal:nth-child(12) { transition-delay: 0.66s; }
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 .caret::after { content: "▌"; margin-left: 2px; color: var(--primary); animation: blink 1s steps(1) infinite; }
 
