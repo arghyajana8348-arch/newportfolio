@@ -12,24 +12,20 @@ import { useEffect } from "react";
  * @param rootMargin IntersectionObserver rootMargin.  Default "0px 0px -40px 0px"
  *                   (fires 40 px before the element reaches the bottom of the viewport)
  */
-export function useScrollReveal(
-  threshold = 0.12,
-  rootMargin = "0px 0px -40px 0px"
-) {
+export function useScrollReveal(threshold = 0.12, rootMargin = "0px 0px -40px 0px") {
   useEffect(() => {
-    const targets =
-      document.querySelectorAll<HTMLElement>(".reveal");
+    const targets = document.querySelectorAll<HTMLElement>(".reveal");
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("in-view");
-            observer.unobserve(entry.target);   // one-shot
+            observer.unobserve(entry.target); // one-shot
           }
         });
       },
-      { threshold, rootMargin }
+      { threshold, rootMargin },
     );
 
     targets.forEach((el) => observer.observe(el));

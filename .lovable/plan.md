@@ -1,7 +1,9 @@
 ## Goal
+
 Add a compact Spline 3D showcase beside the "Things I've been building" projects grid, so the original robot scene (and future scenes) live on the site alongside the custom Three.js hero.
 
 ## Layout
+
 Restructure the Projects section into a two-column grid on `lg` and up:
 
 ```text
@@ -35,5 +37,6 @@ Column ratio: `lg:grid-cols-[1fr_320px]`. The showcase column has its own small 
 4. **Default scene** — reuse the previously integrated URL `https://prod.spline.design/sVeEmN1NRk0vpwDo/scene.splinecode` with title "Robot Playground". Easy to swap or extend later.
 
 ## Notes / Limitations
+
 - Spline free-tier watermark will reappear on this embed (the hero stays watermark-free because it uses the custom Three.js scene). If you want it hidden here too, that requires a paid Spline plan.
 - No new scenes were provided, so only the original robot scene is wired up. Send more `.splinecode` URLs any time and I'll drop them into the same sidebar list.

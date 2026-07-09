@@ -30,7 +30,7 @@ function Particle({
     return new THREE.Vector3(
       Math.random() - 0.5,
       Math.random() - 0.5,
-      Math.random() - 0.5
+      Math.random() - 0.5,
     ).normalize();
   }, []);
 
@@ -47,11 +47,7 @@ function Particle({
   return (
     <mesh ref={ref}>
       <sphereGeometry args={[0.04, 8, 8]} />
-      <meshStandardMaterial
-        color={color}
-        emissive={color}
-        emissiveIntensity={2 * glow}
-      />
+      <meshStandardMaterial color={color} emissive={color} emissiveIntensity={2 * glow} />
     </mesh>
   );
 }
@@ -65,7 +61,7 @@ function Scene({ config }: { config: SceneConfig }) {
       initialPosition: new THREE.Vector3(
         (Math.random() - 0.5) * 5,
         (Math.random() - 0.5) * 5,
-        (Math.random() - 0.5) * 3
+        (Math.random() - 0.5) * 3,
       ),
       speed: 0.15 + Math.random() * 0.35,
       isAccent: i % 3 === 0,
@@ -76,15 +72,11 @@ function Scene({ config }: { config: SceneConfig }) {
     if (!groupRef.current) return;
     const targetX = state.pointer.y * 0.35;
     const targetY = state.pointer.x * 0.35;
-    groupRef.current.rotation.x = THREE.MathUtils.lerp(
-      groupRef.current.rotation.x,
-      targetX,
-      0.04
-    );
+    groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetX, 0.04);
     groupRef.current.rotation.y = THREE.MathUtils.lerp(
       groupRef.current.rotation.y,
       targetY + state.clock.elapsedTime * 0.12,
-      0.04
+      0.04,
     );
   });
 
@@ -179,7 +171,11 @@ export function Hero3D() {
       >
         <ambientLight intensity={0.3} />
         <pointLight position={[4, 4, 4]} intensity={1.2 * config.glow} color={config.coreColor} />
-        <pointLight position={[-3, -2, 3]} intensity={0.6 * config.glow} color={config.ringOuterColor} />
+        <pointLight
+          position={[-3, -2, 3]}
+          intensity={0.6 * config.glow}
+          color={config.ringOuterColor}
+        />
         <Scene config={config} />
       </Canvas>
 
@@ -220,9 +216,7 @@ export function Hero3D() {
               max={3}
               step={0.05}
               value={config.glow}
-              onChange={(e) =>
-                setConfig((c) => ({ ...c, glow: parseFloat(e.target.value) }))
-              }
+              onChange={(e) => setConfig((c) => ({ ...c, glow: parseFloat(e.target.value) }))}
               className="w-full accent-primary"
             />
           </div>

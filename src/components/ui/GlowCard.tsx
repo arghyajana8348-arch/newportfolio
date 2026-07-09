@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, ReactNode } from 'react';
+import React, { useEffect, useRef, ReactNode } from "react";
 
 interface GlowCardProps {
   children: ReactNode;
   className?: string;
-  glowColor?: 'blue' | 'purple' | 'green' | 'red' | 'orange';
-  size?: 'sm' | 'md' | 'lg';
+  glowColor?: "blue" | "purple" | "green" | "red" | "orange";
+  size?: "sm" | "md" | "lg";
   width?: string | number;
   height?: string | number;
   customSize?: boolean; // When true, ignores size prop and uses width/height or className
@@ -16,24 +16,24 @@ const glowColorMap = {
   purple: { base: 280, spread: 300 },
   green: { base: 120, spread: 200 },
   red: { base: 0, spread: 200 },
-  orange: { base: 30, spread: 200 }
+  orange: { base: 30, spread: 200 },
 };
 
 const sizeMap = {
-  sm: 'w-48 h-64',
-  md: 'w-64 h-80',
-  lg: 'w-80 h-96'
+  sm: "w-48 h-64",
+  md: "w-64 h-80",
+  lg: "w-80 h-96",
 };
 
-const GlowCard: React.FC<GlowCardProps> = ({ 
-  children, 
-  className = '', 
-  glowColor = 'blue',
-  size = 'md',
+const GlowCard: React.FC<GlowCardProps> = ({
+  children,
+  className = "",
+  glowColor = "blue",
+  size = "md",
   width,
   height,
   customSize = false,
-  style = {}
+  style = {},
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
@@ -41,22 +41,22 @@ const GlowCard: React.FC<GlowCardProps> = ({
   useEffect(() => {
     const syncPointer = (e: PointerEvent) => {
       const { clientX: x, clientY: y } = e;
-      
+
       if (cardRef.current) {
         const rect = cardRef.current.getBoundingClientRect();
         // Since backgroundAttachment: fixed is used, it uses window-relative clientX/clientY.
         // But let's calculate relative to the card so that spotlight moves with the cursor inside the card bounds!
         const relativeX = x - rect.left;
         const relativeY = y - rect.top;
-        cardRef.current.style.setProperty('--x', relativeX.toFixed(2));
-        cardRef.current.style.setProperty('--xp', (relativeX / rect.width).toFixed(2));
-        cardRef.current.style.setProperty('--y', relativeY.toFixed(2));
-        cardRef.current.style.setProperty('--yp', (relativeY / rect.height).toFixed(2));
+        cardRef.current.style.setProperty("--x", relativeX.toFixed(2));
+        cardRef.current.style.setProperty("--xp", (relativeX / rect.width).toFixed(2));
+        cardRef.current.style.setProperty("--y", relativeY.toFixed(2));
+        cardRef.current.style.setProperty("--yp", (relativeY / rect.height).toFixed(2));
       }
     };
 
-    document.addEventListener('pointermove', syncPointer);
-    return () => document.removeEventListener('pointermove', syncPointer);
+    document.addEventListener("pointermove", syncPointer);
+    return () => document.removeEventListener("pointermove", syncPointer);
   }, []);
 
   const { base, spread } = glowColorMap[glowColor];
@@ -64,44 +64,44 @@ const GlowCard: React.FC<GlowCardProps> = ({
   // Determine sizing
   const getSizeClasses = () => {
     if (customSize) {
-      return ''; // Let className or inline styles handle sizing
+      return ""; // Let className or inline styles handle sizing
     }
     return sizeMap[size];
   };
 
   const getInlineStyles = () => {
-    const baseStyles: React.CSSProperties & { [key: string]: any } = {
-      '--base': base,
-      '--spread': spread,
-      '--radius': '14',
-      '--border': '1.5',
-      '--backdrop': 'rgba(13, 19, 34, 0.55)',
-      '--backup-border': 'rgba(255, 255, 255, 0.08)',
-      '--size': '250',
-      '--outer': '1',
-      '--border-size': 'calc(var(--border, 1.5) * 1px)',
-      '--spotlight-size': 'calc(var(--size, 250) * 1px)',
-      '--hue': 'calc(var(--base) + (var(--xp, 0) * var(--spread, 0)))',
+    const baseStyles: React.CSSProperties & Record<string, string | number | undefined> = {
+      "--base": base,
+      "--spread": spread,
+      "--radius": "14",
+      "--border": "1.5",
+      "--backdrop": "rgba(13, 19, 34, 0.55)",
+      "--backup-border": "rgba(255, 255, 255, 0.08)",
+      "--size": "250",
+      "--outer": "1",
+      "--border-size": "calc(var(--border, 1.5) * 1px)",
+      "--spotlight-size": "calc(var(--size, 250) * 1px)",
+      "--hue": "calc(var(--base) + (var(--xp, 0) * var(--spread, 0)))",
       backgroundImage: `radial-gradient(
         var(--spotlight-size) var(--spotlight-size) at
         calc(var(--x, 0) * 1px)
         calc(var(--y, 0) * 1px),
         hsl(var(--hue, 210) 100% 70% / 0.15), transparent
       )`,
-      backgroundColor: 'var(--backdrop, transparent)',
-      backgroundSize: '100% 100%',
-      backgroundPosition: '50% 50%',
-      border: 'var(--border-size) solid var(--backup-border)',
-      position: 'relative' as const,
-      touchAction: 'none' as const,
+      backgroundColor: "var(--backdrop, transparent)",
+      backgroundSize: "100% 100%",
+      backgroundPosition: "50% 50%",
+      border: "var(--border-size) solid var(--backup-border)",
+      position: "relative" as const,
+      touchAction: "none" as const,
     };
 
     // Add width and height if provided
     if (width !== undefined) {
-      baseStyles.width = typeof width === 'number' ? `${width}px` : width;
+      baseStyles.width = typeof width === "number" ? `${width}px` : width;
     }
     if (height !== undefined) {
-      baseStyles.height = typeof height === 'number' ? `${height}px` : height;
+      baseStyles.height = typeof height === "number" ? `${height}px` : height;
     }
 
     return baseStyles;
@@ -174,7 +174,7 @@ const GlowCard: React.FC<GlowCardProps> = ({
         style={{ ...getInlineStyles(), ...style }}
         className={`
           ${getSizeClasses()}
-          ${!customSize ? 'aspect-[3/4]' : ''}
+          ${!customSize ? "aspect-[3/4]" : ""}
           rounded-2xl 
           relative 
           flex flex-col

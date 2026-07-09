@@ -48,11 +48,17 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           transition={{ duration: 0.5 }}
           className="text-xs font-mono text-muted-foreground tracking-[0.3em] uppercase flex items-center gap-1.5"
         >
-          <span className="text-primary font-bold">~</span>arghya<span className="font-bold" style={{ color: "#8b82ff" }}>.dev</span>
+          <span className="text-primary font-bold">~</span>arghya
+          <span className="font-bold" style={{ color: "#8b82ff" }}>
+            .dev
+          </span>
         </motion.div>
 
         {/* Loading Bar */}
-        <div className="w-[180px] h-[2px] rounded-full overflow-hidden relative" style={{ background: "rgba(255,255,255,0.05)" }}>
+        <div
+          className="w-[180px] h-[2px] rounded-full overflow-hidden relative"
+          style={{ background: "rgba(255,255,255,0.05)" }}
+        >
           <motion.div
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.05 }}

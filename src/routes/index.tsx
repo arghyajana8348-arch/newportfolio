@@ -1,20 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState, lazy, Suspense } from "react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { 
-  FileText, 
-  Home, 
-  User, 
-  Briefcase, 
-  FolderGit2, 
-  Flame, 
-  Mail, 
-  Github, 
+import {
+  FileText,
+  Home,
+  User,
+  Briefcase,
+  FolderGit2,
+  Flame,
+  Mail,
+  Github,
   Linkedin,
   Trophy,
   Gamepad2,
   Terminal,
-  Sparkles
+  Sparkles,
 } from "lucide-react";
 import arghyaPhoto from "@/assets/arghya.png.asset.json";
 const heroPhoto = { url: "/hero-photo.webp" };
@@ -45,7 +45,11 @@ function NeonAnchor({
   neon?: boolean;
 }) {
   return (
-    <a href={href} className={cn(neonVariants({ variant, size }), "font-mono text-sm", className)} {...rest}>
+    <a
+      href={href}
+      className={cn(neonVariants({ variant, size }), "font-mono text-sm", className)}
+      {...rest}
+    >
       <span
         className={cn(
           "absolute h-px opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out inset-x-0 -top-px bg-gradient-to-r w-3/4 mx-auto from-transparent via-primary to-transparent hidden",
@@ -63,14 +67,21 @@ function NeonAnchor({
   );
 }
 
-
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Arghya Jana — CSE Student & Aspiring Software Engineer" },
-      { name: "description", content: "Portfolio of Arghya Jana, 1st-year B.Tech CSE student at Heritage Institute of Technology." },
+      {
+        name: "description",
+        content:
+          "Portfolio of Arghya Jana, 1st-year B.Tech CSE student at Heritage Institute of Technology.",
+      },
       { property: "og:title", content: "Arghya Jana — CSE Student Portfolio" },
-      { property: "og:description", content: "1st-year B.Tech CSE student at HITK. SGPA 9.53. Building foundations in software engineering." },
+      {
+        property: "og:description",
+        content:
+          "1st-year B.Tech CSE student at HITK. SGPA 9.53. Building foundations in software engineering.",
+      },
     ],
     links: [{ rel: "preload", as: "image", href: heroPhoto.url, fetchPriority: "high" }],
   }),
@@ -95,9 +106,13 @@ function ShowCaseScroll() {
       <ContainerScroll
         titleComponent={
           <div className="reveal">
-            <p className="font-mono text-xs text-primary uppercase tracking-widest">// developer profile</p>
+            <p className="font-mono text-xs text-primary uppercase tracking-widest">
+              // developer profile
+            </p>
             <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold text-foreground mt-2 leading-tight">
-              <span className="text-gradient text-4xl sm:text-6xl md:text-7xl font-extrabold">Developer Profile</span>
+              <span className="text-gradient text-4xl sm:text-6xl md:text-7xl font-extrabold">
+                Developer Profile
+              </span>
             </h2>
           </div>
         }
@@ -111,9 +126,10 @@ function ShowCaseScroll() {
           </div>
           <div className="flex-1 space-y-4">
             <div>
-              <span className="text-[#ff7b72]">guest@arghyajana.dev</span>:<span className="text-[#79c0ff]">~</span>$ cat info.json
+              <span className="text-[#ff7b72]">guest@arghyajana.dev</span>:
+              <span className="text-[#79c0ff]">~</span>$ cat info.json
               <pre className="text-[#a5d6ff] mt-2 whitespace-pre-wrap pl-4">
-{`{
+                {`{
   "name": "Arghya Jana",
   "role": "Computer Science Engineering Student",
   "focus": "Full Stack Development & Systems Engineering",
@@ -124,7 +140,8 @@ function ShowCaseScroll() {
               </pre>
             </div>
             <div>
-              <span className="text-[#ff7b72]">guest@arghyajana.dev</span>:<span className="text-[#79c0ff]">~</span>$ ./skills.sh --list
+              <span className="text-[#ff7b72]">guest@arghyajana.dev</span>:
+              <span className="text-[#79c0ff]">~</span>$ ./skills.sh --list
               <div className="mt-2 pl-4 grid grid-cols-1 sm:grid-cols-2 gap-2 text-[#79c0ff]">
                 <div>• HTML / CSS / JavaScript</div>
                 <div>• React.js / Vite</div>
@@ -135,7 +152,8 @@ function ShowCaseScroll() {
               </div>
             </div>
             <div>
-              <span className="text-[#ff7b72]">guest@arghyajana.dev</span>:<span className="text-[#79c0ff]">~</span>$ <span className="animate-pulse">_</span>
+              <span className="text-[#ff7b72]">guest@arghyajana.dev</span>:
+              <span className="text-[#79c0ff]">~</span>$ <span className="animate-pulse">_</span>
             </div>
           </div>
         </div>
@@ -149,20 +167,28 @@ function FloatingDock() {
     { title: "Home", icon: <Home className="h-5 w-5 text-[#6dd3ff]" />, href: "#home" },
     { title: "About", icon: <User className="h-5 w-5 text-[#7ce7e5]" />, href: "#about" },
     { title: "Skills", icon: <Briefcase className="h-5 w-5 text-[#8b82ff]" />, href: "#skills" },
-    { title: "Projects", icon: <FolderGit2 className="h-5 w-5 text-[#f279c6]" />, href: "#projects" },
-    { title: "Activities", icon: <Flame className="h-5 w-5 text-[#ffbd2e]" />, href: "#activities" },
-    { title: "Contact", icon: <Mail className="h-5 w-5 text-[#6dd3ff]" />, href: "#contact" },
-    { 
-      title: "GitHub", 
-      icon: <Github className="h-5 w-5 text-neutral-300 hover:text-white" />, 
-      href: "https://github.com/arghyajana8348-arch", 
-      external: true 
+    {
+      title: "Projects",
+      icon: <FolderGit2 className="h-5 w-5 text-[#f279c6]" />,
+      href: "#projects",
     },
-    { 
-      title: "LinkedIn", 
-      icon: <Linkedin className="h-5 w-5 text-[#0077b5]" />, 
-      href: "https://linkedin.com/in/arghya-jana", 
-      external: true 
+    {
+      title: "Activities",
+      icon: <Flame className="h-5 w-5 text-[#ffbd2e]" />,
+      href: "#activities",
+    },
+    { title: "Contact", icon: <Mail className="h-5 w-5 text-[#6dd3ff]" />, href: "#contact" },
+    {
+      title: "GitHub",
+      icon: <Github className="h-5 w-5 text-neutral-300 hover:text-white" />,
+      href: "https://github.com/arghyajana8348-arch",
+      external: true,
+    },
+    {
+      title: "LinkedIn",
+      icon: <Linkedin className="h-5 w-5 text-[#0077b5]" />,
+      href: "https://linkedin.com/in/arghya-jana",
+      external: true,
     },
   ];
 
@@ -204,9 +230,7 @@ function PortfolioClient({ onComplete }: { onComplete: () => void }) {
 
   return (
     <AnimatePresence mode="wait">
-      {isLoading && (
-        <LoadingScreen onComplete={handleComplete} />
-      )}
+      {isLoading && <LoadingScreen onComplete={handleComplete} />}
     </AnimatePresence>
   );
 }
@@ -263,12 +287,13 @@ function Nav({ active = false }: { active?: boolean }) {
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         scrolled
           ? "backdrop-blur-md bg-[color-mix(in_oklab,var(--background)_70%,transparent)] border-b border-border/80 py-2"
-          : "bg-transparent border-b border-transparent py-4"
+          : "bg-transparent border-b border-transparent py-4",
       )}
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-5">
         <a href="#home" className="font-mono text-sm font-bold text-primary">
-          <span className="text-muted-foreground">~</span>arghya<span className="text-accent">.dev</span>
+          <span className="text-muted-foreground">~</span>arghya
+          <span className="text-accent">.dev</span>
         </a>
 
         <div className="flex items-center gap-3">
@@ -295,9 +320,12 @@ function Nav({ active = false }: { active?: boolean }) {
             <FileText className="h-4 w-4" />
           </a>
 
-
-
-          <NeonAnchor href="#contact" variant="default" size="sm" className="text-xs whitespace-nowrap">
+          <NeonAnchor
+            href="#contact"
+            variant="default"
+            size="sm"
+            className="text-xs whitespace-nowrap"
+          >
             <span className="hidden sm:inline">let's talk →</span>
             <span className="inline sm:hidden">talk →</span>
           </NeonAnchor>
@@ -306,7 +334,6 @@ function Nav({ active = false }: { active?: boolean }) {
     </motion.header>
   );
 }
-
 
 // ---------- Hero ----------
 function Hero({ active = false }: { active?: boolean }) {
@@ -319,7 +346,9 @@ function Hero({ active = false }: { active?: boolean }) {
       const splineViewers = document.querySelectorAll("spline-viewer");
       splineViewers.forEach((viewer) => {
         if (viewer.shadowRoot) {
-          const logo = viewer.shadowRoot.getElementById("logo") || viewer.shadowRoot.querySelector("a[href*='spline']");
+          const logo =
+            viewer.shadowRoot.getElementById("logo") ||
+            viewer.shadowRoot.querySelector("a[href*='spline']");
           if (logo) {
             const logoHtml = logo as HTMLElement;
             logoHtml.style.setProperty("display", "none", "important");
@@ -353,7 +382,7 @@ function Hero({ active = false }: { active?: boolean }) {
       ([entry]) => {
         setIsRobotVisible(entry.isIntersecting);
       },
-      { threshold: 0.02 }
+      { threshold: 0.02 },
     );
     if (containerRef.current) {
       observer.observe(containerRef.current);
@@ -365,9 +394,10 @@ function Hero({ active = false }: { active?: boolean }) {
     };
   }, []);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSplineLoad = (splineApp: any) => {
     if (splineApp && splineApp.camera) {
-      if (splineApp.camera.zoom) {
+      if (splineApp.camera.zoom !== undefined) {
         splineApp.camera.zoom = 0.72;
       }
       if (splineApp.camera.position) {
@@ -389,59 +419,66 @@ function Hero({ active = false }: { active?: boolean }) {
       transition: {
         staggerChildren: 0.15,
         delayChildren: 0.2,
-      }
-    }
+      },
+    },
   };
 
   const imageVariants = {
     initial: { opacity: 0, scale: 0.85, y: -20 },
-    animate: { 
-      opacity: 1, 
-      scale: 1, 
+    animate: {
+      opacity: 1,
+      scale: 1,
       y: 0,
-      transition: { duration: 1.0, ease: [0.16, 1, 0.3, 1] as const } 
-    }
+      transition: { duration: 1.0, ease: [0.16, 1, 0.3, 1] as const },
+    },
   };
 
   const textVariants = {
     initial: { opacity: 0, x: -40 },
-    animate: { 
-      opacity: 1, 
+    animate: {
+      opacity: 1,
       x: 0,
-      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const } 
-    }
+      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const },
+    },
   };
 
   const ctaVariants = {
     initial: { opacity: 0, y: 25 },
-    animate: { 
-      opacity: 1, 
+    animate: {
+      opacity: 1,
       y: 0,
-      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const } 
-    }
+      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const },
+    },
   };
 
   const robotVariants = {
     initial: { opacity: 0, scale: 0.9, x: 50 },
-    animate: { 
-      opacity: 1, 
-      scale: 1, 
+    animate: {
+      opacity: 1,
+      scale: 1,
       x: 0,
-      transition: { duration: 1.4, ease: [0.16, 1, 0.3, 1] as const, delay: 0.4 } 
-    }
+      transition: { duration: 1.4, ease: [0.16, 1, 0.3, 1] as const, delay: 0.4 },
+    },
   };
 
   return (
-    <section ref={containerRef} id="home" className="relative flex min-h-screen items-center pt-24 pb-16">
+    <section
+      ref={containerRef}
+      id="home"
+      className="relative flex min-h-screen items-center pt-24 pb-16"
+    >
       <div className="absolute inset-0 grid-bg pointer-events-none" aria-hidden />
       <div className="mx-auto grid max-w-6xl grid-cols-1 lg:grid-cols-[1.4fr_1fr] items-center gap-12 px-5 relative">
-        <motion.div 
+        <motion.div
           variants={containerVariants}
           initial="initial"
           animate={active ? "animate" : "initial"}
           className="flex flex-col"
         >
-          <motion.div variants={imageVariants} className="mb-6 h-40 w-40 sm:h-48 sm:w-48 md:h-56 md:w-56 rounded-full overflow-hidden border-2 border-primary/70 shadow-[0_0_40px_-6px_var(--primary)]">
+          <motion.div
+            variants={imageVariants}
+            className="mb-6 h-40 w-40 sm:h-48 sm:w-48 md:h-56 md:w-56 rounded-full overflow-hidden border-2 border-primary/70 shadow-[0_0_40px_-6px_var(--primary)]"
+          >
             <img
               src={heroPhoto.url}
               alt="Arghya Jana"
@@ -453,13 +490,13 @@ function Hero({ active = false }: { active?: boolean }) {
             />
           </motion.div>
 
-          <motion.h1 
+          <motion.h1
             variants={textVariants}
             className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight"
           >
             Arghya <span className="text-gradient">Jana</span>
           </motion.h1>
-          <motion.p 
+          <motion.p
             variants={textVariants}
             className="mt-5 font-mono text-sm sm:text-base text-muted-foreground"
           >
@@ -467,7 +504,7 @@ function Hero({ active = false }: { active?: boolean }) {
             <span className="mx-2 text-border">|</span>
             <span className="text-accent">Aspiring Software Engineer</span>
           </motion.p>
-          <motion.p 
+          <motion.p
             variants={textVariants}
             className="mt-6 max-w-xl text-base text-muted-foreground leading-relaxed"
           >
@@ -475,10 +512,7 @@ function Hero({ active = false }: { active?: boolean }) {
             applying analytical skills toward impactful engineering work — with the long-term goal
             of growing into a leadership role.
           </motion.p>
-          <motion.div 
-            variants={ctaVariants}
-            className="mt-8 flex flex-wrap gap-3"
-          >
+          <motion.div variants={ctaVariants} className="mt-8 flex flex-wrap gap-3">
             <NeonAnchor href="#projects" variant="solid" size="lg" className="font-semibold">
               view projects
             </NeonAnchor>
@@ -489,22 +523,27 @@ function Hero({ active = false }: { active?: boolean }) {
         </motion.div>
 
         {/* Box */}
-        <motion.div 
+        <motion.div
           variants={robotVariants}
           initial="initial"
           animate={active ? "animate" : "initial"}
           className="relative aspect-square w-full max-w-[280px] sm:max-w-[360px] lg:max-w-[480px] h-[340px] sm:h-auto mx-auto overflow-hidden pointer-events-none lg:pointer-events-auto"
         >
-          <div 
-            style={{ display: isRobotVisible ? 'block' : 'none' }}
+          <div
+            style={{ display: isRobotVisible ? "block" : "none" }}
             className="absolute -top-[40px] left-0 -right-[80px] lg:left-[90px] lg:-right-[170px] -bottom-[100px] overflow-hidden"
           >
-            <Suspense fallback={
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-              </div>
-            }>
-              <Spline scene="https://prod.spline.design/sVeEmN1NRk0vpwDo/scene.splinecode" onLoad={handleSplineLoad} />
+            <Suspense
+              fallback={
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+                </div>
+              }
+            >
+              <Spline
+                scene="https://prod.spline.design/sVeEmN1NRk0vpwDo/scene.splinecode"
+                onLoad={handleSplineLoad}
+              />
             </Suspense>
           </div>
         </motion.div>
@@ -518,7 +557,12 @@ function About() {
   const timeline = [
     { year: "2022", title: "Secondary (Class X)", org: "WBCSE", score: "94.5%" },
     { year: "2024", title: "Higher Secondary — PCMB", org: "WBCHSE", score: "93%" },
-    { year: "2025–29", title: "B.Tech, Computer Science & Engineering", org: "Heritage Institute of Technology (MAKAUT)", score: "SGPA 9.53" },
+    {
+      year: "2025–29",
+      title: "B.Tech, Computer Science & Engineering",
+      org: "Heritage Institute of Technology (MAKAUT)",
+      score: "SGPA 9.53",
+    },
   ];
   return (
     <section id="about" className="py-24 px-5">
@@ -528,17 +572,18 @@ function About() {
           <div className="reveal space-y-4 text-muted-foreground leading-relaxed">
             <p>
               I'm <span className="text-foreground font-medium">Arghya Jana</span>, a first-year
-              B.Tech CSE student at <span className="text-primary">Heritage Institute of Technology</span>
-              {" "}(affiliated to MAKAUT), graduating in 2029.
+              B.Tech CSE student at{" "}
+              <span className="text-primary">Heritage Institute of Technology</span> (affiliated to
+              MAKAUT), graduating in 2029.
             </p>
             <p>
               Currently maintaining an <span className="text-foreground">SGPA of 9.53</span>, I'm
-              focused on building strong fundamentals in computer science — from data structures
-              and algorithms to systems and software engineering principles.
+              focused on building strong fundamentals in computer science — from data structures and
+              algorithms to systems and software engineering principles.
             </p>
             <p>
-              Outside the classroom, I take part in student communities and tech events to
-              broaden my perspective and meet people building interesting things.
+              Outside the classroom, I take part in student communities and tech events to broaden
+              my perspective and meet people building interesting things.
             </p>
             <div className="flex flex-wrap gap-2 pt-4">
               <Chip>WELCOME.YML — ACM HITK Student Chapter</Chip>
@@ -576,8 +621,18 @@ function About() {
 function Skills() {
   const groups = [
     { key: "languages", label: "Languages", items: ["C", "C++", "Java"], tag: "Foundational" },
-    { key: "web", label: "Web Development", items: ["HTML", "CSS", "JavaScript"], tag: "Currently Learning" },
-    { key: "cs", label: "Exploring", items: ["Data Structures", "Algorithms", "CS Fundamentals"], tag: "In Progress" },
+    {
+      key: "web",
+      label: "Web Development",
+      items: ["HTML", "CSS", "JavaScript"],
+      tag: "Currently Learning",
+    },
+    {
+      key: "cs",
+      label: "Exploring",
+      items: ["Data Structures", "Algorithms", "CS Fundamentals"],
+      tag: "In Progress",
+    },
   ];
   return (
     <section id="skills" className="py-24 px-5">
@@ -653,59 +708,56 @@ function Projects() {
         <div className="mt-10">
           <div className="reveal-stagger grid grid-cols-1 md:grid-cols-2 gap-6">
             {PROJECTS.map((p, i) => (
-            <article
-              key={p.title}
-              className="reveal group project-card-custom p-6"
-            >
-              <div className="flex items-start justify-between">
-                <div className="font-mono text-xs text-muted-foreground">
-                  project_{String(i + 1).padStart(2, "0")}
+              <article key={p.title} className="reveal group project-card-custom p-6">
+                <div className="flex items-start justify-between">
+                  <div className="font-mono text-xs text-muted-foreground">
+                    project_{String(i + 1).padStart(2, "0")}
+                  </div>
+                  <div className="flex gap-2">
+                    {/* PLACEHOLDER links — replace href="#" with real GitHub & live demo URLs */}
+                    <a
+                      href={(p as { github?: string }).github ?? "#"}
+                      target={(p as { github?: string }).github ? "_blank" : undefined}
+                      rel={(p as { github?: string }).github ? "noopener noreferrer" : undefined}
+                      aria-label="GitHub repository"
+                      className="text-muted-foreground hover:text-primary"
+                    >
+                      <IconGitHub />
+                    </a>
+                    <a
+                      href={(p as { link?: string }).link ?? "#"}
+                      target={(p as { link?: string }).link ? "_blank" : undefined}
+                      rel={(p as { link?: string }).link ? "noopener noreferrer" : undefined}
+                      aria-label="Live demo"
+                      className="text-muted-foreground hover:text-primary"
+                    >
+                      <IconExternal />
+                    </a>
+                  </div>
                 </div>
-                <div className="flex gap-2">
-                  {/* PLACEHOLDER links — replace href="#" with real GitHub & live demo URLs */}
-                  <a
-                    href={(p as { github?: string }).github ?? "#"}
-                    target={(p as { github?: string }).github ? "_blank" : undefined}
-                    rel={(p as { github?: string }).github ? "noopener noreferrer" : undefined}
-                    aria-label="GitHub repository"
-                    className="text-muted-foreground hover:text-primary"
-                  >
-                    <IconGitHub />
-                  </a>
-                  <a
-                    href={(p as { link?: string }).link ?? "#"}
-                    target={(p as { link?: string }).link ? "_blank" : undefined}
-                    rel={(p as { link?: string }).link ? "noopener noreferrer" : undefined}
-                    aria-label="Live demo"
-                    className="text-muted-foreground hover:text-primary"
-                  >
-                    <IconExternal />
-                  </a>
+                <div className="mt-4 flex items-center gap-2 flex-wrap">
+                  <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+                    {p.title}
+                  </h3>
+                  {(p as { wip?: boolean }).wip && (
+                    <span className="inline-flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider rounded-full bg-accent/15 text-accent px-2 py-0.5 border border-accent/30">
+                      <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
+                      In Progress
+                    </span>
+                  )}
                 </div>
-              </div>
-              <div className="mt-4 flex items-center gap-2 flex-wrap">
-                <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
-                  {p.title}
-                </h3>
-                {(p as { wip?: boolean }).wip && (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider rounded-full bg-accent/15 text-accent px-2 py-0.5 border border-accent/30">
-                    <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
-                    In Progress
-                  </span>
-                )}
-              </div>
-              <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{p.desc}</p>
-              <div className="mt-5 flex flex-wrap gap-2">
-                {p.tags.map((t) => (
-                  <span
-                    key={t}
-                    className="text-[11px] font-mono rounded-md bg-primary/10 text-primary px-2 py-1 border border-primary/20"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </article>
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{p.desc}</p>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {p.tags.map((t) => (
+                    <span
+                      key={t}
+                      className="text-[11px] font-mono rounded-md bg-primary/10 text-primary px-2 py-1 border border-primary/20"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </article>
             ))}
           </div>
         </div>
@@ -823,7 +875,6 @@ function Contact() {
           Open to learning opportunities, internships, hackathons, and study collaborations.
         </p>
 
-
         <div className="mt-12 grid md:grid-cols-5 gap-6">
           {/* Form card — slides in from left */}
           <div className="md:col-span-3 reveal reveal-left">
@@ -916,7 +967,9 @@ function Contact() {
             <div className="h-full rounded-lg border border-border bg-surface/40 p-5 sm:p-6 flex flex-col">
               <div className="font-mono text-xs text-muted-foreground">contact.info</div>
               <div className="mt-4">
-                <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">Email</div>
+                <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                  Email
+                </div>
                 <a
                   href="mailto:arghyajana8348@gmail.com"
                   className="mt-2 inline-flex items-center gap-2 font-mono text-sm rounded-md border border-primary/60 px-3 py-2 text-primary hover:bg-primary hover:text-primary-foreground transition-colors break-all"
@@ -925,12 +978,26 @@ function Contact() {
                 </a>
               </div>
               <div className="mt-6">
-                <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">Elsewhere</div>
+                <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                  Elsewhere
+                </div>
                 <div className="mt-2 flex gap-3">
-                  <a href="https://linkedin.com/in/arghya-jana" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="rounded-md border border-border bg-surface p-3 text-muted-foreground hover:text-primary hover:border-primary transition-colors">
+                  <a
+                    href="https://linkedin.com/in/arghya-jana"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="LinkedIn"
+                    className="rounded-md border border-border bg-surface p-3 text-muted-foreground hover:text-primary hover:border-primary transition-colors"
+                  >
                     <IconLinkedIn />
                   </a>
-                  <a href="https://github.com/arghyajana8348-arch" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="rounded-md border border-border bg-surface p-3 text-muted-foreground hover:text-primary hover:border-primary transition-colors">
+                  <a
+                    href="https://github.com/arghyajana8348-arch"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="GitHub"
+                    className="rounded-md border border-border bg-surface p-3 text-muted-foreground hover:text-primary hover:border-primary transition-colors"
+                  >
                     <IconGitHub />
                   </a>
                 </div>
@@ -952,9 +1019,7 @@ function Footer() {
     <footer className="border-t border-border py-8 px-5 mt-10">
       <div className="mx-auto max-w-6xl flex flex-col sm:flex-row items-center justify-between gap-3 font-mono text-xs text-muted-foreground">
         <div>© 2026 Arghya Jana</div>
-        <div>
-          {"\n"}
-        </div>
+        <div>{"\n"}</div>
       </div>
     </footer>
   );
@@ -994,7 +1059,15 @@ function IconGitHub() {
 }
 function IconExternal() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      aria-hidden
+    >
       <path d="M14 3h7v7M10 14L21 3M21 14v7H3V3h7" />
     </svg>
   );
@@ -1013,15 +1086,42 @@ function MonogramAvatar() {
       className="relative h-56 w-56 sm:h-72 sm:w-72 rounded-full"
       style={{ animation: "pulse-glow 4s ease-in-out infinite" }}
     >
-      <svg viewBox="0 0 240 240" className="absolute inset-0 h-full w-full pointer-events-none" aria-hidden>
+      <svg
+        viewBox="0 0 240 240"
+        className="absolute inset-0 h-full w-full pointer-events-none"
+        aria-hidden
+      >
         <defs>
           <pattern id="mg-grid" width="16" height="16" patternUnits="userSpaceOnUse">
-            <path d="M16 0H0V16" fill="none" stroke="var(--primary)" strokeOpacity="0.12" strokeWidth="1" />
+            <path
+              d="M16 0H0V16"
+              fill="none"
+              stroke="var(--primary)"
+              strokeOpacity="0.12"
+              strokeWidth="1"
+            />
           </pattern>
         </defs>
         <circle cx="120" cy="120" r="118" fill="url(#mg-grid)" />
-        <circle cx="120" cy="120" r="116" fill="none" stroke="var(--primary)" strokeOpacity="0.5" strokeWidth="1" strokeDasharray="2 6" />
-        <circle cx="120" cy="120" r="104" fill="none" stroke="var(--accent)" strokeOpacity="0.3" strokeWidth="1" />
+        <circle
+          cx="120"
+          cy="120"
+          r="116"
+          fill="none"
+          stroke="var(--primary)"
+          strokeOpacity="0.5"
+          strokeWidth="1"
+          strokeDasharray="2 6"
+        />
+        <circle
+          cx="120"
+          cy="120"
+          r="104"
+          fill="none"
+          stroke="var(--accent)"
+          strokeOpacity="0.3"
+          strokeWidth="1"
+        />
       </svg>
 
       {/* photo */}
@@ -1029,11 +1129,17 @@ function MonogramAvatar() {
         src={arghyaPhoto.url}
         alt="Arghya Jana portrait"
         className="absolute inset-3 h-[calc(100%-1.5rem)] w-[calc(100%-1.5rem)] rounded-full object-cover border border-primary/40"
-        style={{ boxShadow: "inset 0 0 40px color-mix(in oklab, var(--background) 40%, transparent)" }}
+        style={{
+          boxShadow: "inset 0 0 40px color-mix(in oklab, var(--background) 40%, transparent)",
+        }}
       />
 
       {/* corner brackets */}
-      <svg viewBox="0 0 240 240" className="absolute inset-0 h-full w-full pointer-events-none" aria-hidden>
+      <svg
+        viewBox="0 0 240 240"
+        className="absolute inset-0 h-full w-full pointer-events-none"
+        aria-hidden
+      >
         <g stroke="var(--primary)" strokeWidth="2.5" fill="none" strokeLinecap="round">
           <path d="M28 56 V28 H56" />
           <path d="M212 56 V28 H184" />
@@ -1045,10 +1151,17 @@ function MonogramAvatar() {
   );
 }
 
-
 function IconMail() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      aria-hidden
+    >
       <rect x="3" y="5" width="18" height="14" rx="2" />
       <path d="M3 7l9 6 9-6" />
     </svg>

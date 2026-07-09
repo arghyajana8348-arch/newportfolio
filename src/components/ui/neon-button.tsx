@@ -26,19 +26,14 @@ const buttonVariants = cva(
 );
 
 export interface NeonButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   neon?: boolean;
 }
 
 const NeonButton = React.forwardRef<HTMLButtonElement, NeonButtonProps>(
   ({ className, neon = true, size, variant, children, ...props }, ref) => {
     return (
-      <button
-        className={cn(buttonVariants({ variant, size }), className)}
-        ref={ref}
-        {...props}
-      >
+      <button className={cn(buttonVariants({ variant, size }), className)} ref={ref} {...props}>
         <span
           className={cn(
             "absolute h-px opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out inset-x-0 -top-px bg-gradient-to-r w-3/4 mx-auto from-transparent via-primary to-transparent hidden",

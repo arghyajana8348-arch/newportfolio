@@ -1,56 +1,56 @@
-import { useRef, useMemo, useState, useEffect } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import * as THREE from 'three'
+import { useRef, useMemo, useState, useEffect } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import * as THREE from "three";
 
 interface ParticlesProps {
-  count?: number
+  count?: number;
 }
 
 function Particles({ count = 2000 }: ParticlesProps) {
-  const meshRef = useRef<THREE.Points>(null)
+  const meshRef = useRef<THREE.Points>(null);
 
   const [positions, velocities] = useMemo(() => {
-    const pos = new Float32Array(count * 3)
-    const vel = new Float32Array(count * 3)
+    const pos = new Float32Array(count * 3);
+    const vel = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 20
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 20
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 15
-      vel[i * 3] = (Math.random() - 0.5) * 0.002
-      vel[i * 3 + 1] = (Math.random() - 0.5) * 0.002
-      vel[i * 3 + 2] = (Math.random() - 0.5) * 0.002
+      pos[i * 3] = (Math.random() - 0.5) * 20;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 20;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 15;
+      vel[i * 3] = (Math.random() - 0.5) * 0.002;
+      vel[i * 3 + 1] = (Math.random() - 0.5) * 0.002;
+      vel[i * 3 + 2] = (Math.random() - 0.5) * 0.002;
     }
-    return [pos, vel]
-  }, [count])
+    return [pos, vel];
+  }, [count]);
 
   const sizes = useMemo(() => {
-    const s = new Float32Array(count)
+    const s = new Float32Array(count);
     for (let i = 0; i < count; i++) {
-      s[i] = Math.random() * 2 + 0.5
+      s[i] = Math.random() * 2 + 0.5;
     }
-    return s
-  }, [count])
+    return s;
+  }, [count]);
 
   useFrame((state) => {
-    if (!meshRef.current) return
-    const positionsArray = meshRef.current.geometry.attributes.position.array as Float32Array
-    const time = state.clock.elapsedTime
+    if (!meshRef.current) return;
+    const positionsArray = meshRef.current.geometry.attributes.position.array as Float32Array;
+    const time = state.clock.elapsedTime;
 
     for (let i = 0; i < count; i++) {
-      const i3 = i * 3
-      positionsArray[i3] += velocities[i3] + Math.sin(time * 0.3 + i * 0.01) * 0.001
-      positionsArray[i3 + 1] += velocities[i3 + 1] + Math.cos(time * 0.2 + i * 0.01) * 0.001
-      positionsArray[i3 + 2] += velocities[i3 + 2]
+      const i3 = i * 3;
+      positionsArray[i3] += velocities[i3] + Math.sin(time * 0.3 + i * 0.01) * 0.001;
+      positionsArray[i3 + 1] += velocities[i3 + 1] + Math.cos(time * 0.2 + i * 0.01) * 0.001;
+      positionsArray[i3 + 2] += velocities[i3 + 2];
 
       // Boundary wrap
-      if (Math.abs(positionsArray[i3]) > 10) positionsArray[i3] *= -0.9
-      if (Math.abs(positionsArray[i3 + 1]) > 10) positionsArray[i3 + 1] *= -0.9
-      if (Math.abs(positionsArray[i3 + 2]) > 8) positionsArray[i3 + 2] *= -0.9
+      if (Math.abs(positionsArray[i3]) > 10) positionsArray[i3] *= -0.9;
+      if (Math.abs(positionsArray[i3 + 1]) > 10) positionsArray[i3 + 1] *= -0.9;
+      if (Math.abs(positionsArray[i3 + 2]) > 8) positionsArray[i3 + 2] *= -0.9;
     }
 
-    meshRef.current.geometry.attributes.position.needsUpdate = true
-    meshRef.current.rotation.y = time * 0.02
-  })
+    meshRef.current.geometry.attributes.position.needsUpdate = true;
+    meshRef.current.rotation.y = time * 0.02;
+  });
 
   return (
     <points ref={meshRef}>
@@ -80,26 +80,26 @@ function Particles({ count = 2000 }: ParticlesProps) {
         depthWrite={false}
       />
     </points>
-  )
+  );
 }
 
 function FloatingGeometry() {
-  const meshRef = useRef<THREE.Mesh>(null)
-  const wireRef = useRef<THREE.Mesh>(null)
+  const meshRef = useRef<THREE.Mesh>(null);
+  const wireRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
-    const t = state.clock.elapsedTime
+    const t = state.clock.elapsedTime;
     if (meshRef.current) {
-      meshRef.current.rotation.x = t * 0.15
-      meshRef.current.rotation.y = t * 0.2
-      meshRef.current.position.y = Math.sin(t * 0.5) * 0.3
+      meshRef.current.rotation.x = t * 0.15;
+      meshRef.current.rotation.y = t * 0.2;
+      meshRef.current.position.y = Math.sin(t * 0.5) * 0.3;
     }
     if (wireRef.current) {
-      wireRef.current.rotation.x = -t * 0.1
-      wireRef.current.rotation.z = t * 0.12
-      wireRef.current.position.y = Math.cos(t * 0.4) * 0.2
+      wireRef.current.rotation.x = -t * 0.1;
+      wireRef.current.rotation.z = t * 0.12;
+      wireRef.current.position.y = Math.cos(t * 0.4) * 0.2;
     }
-  })
+  });
 
   return (
     <>
@@ -124,49 +124,45 @@ function FloatingGeometry() {
         />
       </mesh>
     </>
-  )
+  );
 }
 
 function GridFloor() {
   return (
-    <gridHelper
-      args={[40, 40, '#0a2a3a', '#0a1520']}
-      position={[0, -4, 0]}
-      rotation={[0, 0, 0]}
-    />
-  )
+    <gridHelper args={[40, 40, "#0a2a3a", "#0a1520"]} position={[0, -4, 0]} rotation={[0, 0, 0]} />
+  );
 }
 
 export function ParticleField() {
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   return (
     <Canvas
       camera={{ position: [0, 0, 6], fov: 65 }}
       style={{
-        position: 'fixed',
+        position: "fixed",
         top: 0,
         left: 0,
-        width: '100%',
-        height: '100%',
-        pointerEvents: 'none',
+        width: "100%",
+        height: "100%",
+        pointerEvents: "none",
         zIndex: 0,
       }}
-      gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
+      gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
       dpr={isMobile ? 1 : [1, 1.5]}
     >
       <Particles count={isMobile ? 350 : 1500} />
       {!isMobile && <FloatingGeometry />}
       {!isMobile && <GridFloor />}
     </Canvas>
-  )
+  );
 }
