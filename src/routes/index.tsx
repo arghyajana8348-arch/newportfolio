@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import arghyaPhoto from "@/assets/arghya.png.asset.json";
 const heroPhoto = { url: "/hero-photo.webp" };
-const resumeAsset = { url: "/resume.pdf" };
+const resumeAsset = { url: "/resume.pdf?v=2" };
 import { toast, Toaster } from "sonner";
 import { buttonVariants as neonVariants } from "@/components/ui/neon-button";
 import { cn } from "@/lib/utils";
@@ -306,7 +306,7 @@ function Nav({ active = false }: { active?: boolean }) {
             onClick={async (e) => {
               e.preventDefault();
               try {
-                const res = await fetch(resumeAsset.url);
+                const res = await fetch(resumeAsset.url, { cache: "reload" });
                 const blob = await res.blob();
                 const url = URL.createObjectURL(blob);
                 window.open(url, "_blank", "noopener,noreferrer");
