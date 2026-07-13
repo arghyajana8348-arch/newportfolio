@@ -11,6 +11,10 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { ClientOnly } from "../components/ClientOnly";
+import { SpringMouseFollow } from "../components/SpringMouseFollow";
+import { ScrollProgressBar } from "../components/ScrollProgressBar";
+import { ElevenLabsWidget } from "../components/ElevenLabsWidget";
 
 function NotFoundComponent() {
   return (
@@ -144,6 +148,11 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
+      <ClientOnly>
+        <ScrollProgressBar />
+        <SpringMouseFollow />
+        <ElevenLabsWidget />
+      </ClientOnly>
     </QueryClientProvider>
   );
 }

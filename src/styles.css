@@ -279,3 +279,10 @@
   left: 130%;
   opacity: 1;
 }
+
+elevenlabs-convai {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 45 !important;
+}
