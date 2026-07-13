@@ -281,11 +281,13 @@
 }
 
 elevenlabs-convai {
+  display: none;
   z-index: 45 !important;
 }
 
 @media (min-width: 768px) {
   elevenlabs-convai {
+    display: block;
     position: fixed;
     bottom: 24px;
     right: 24px;
